@@ -15,6 +15,11 @@ public class Stock {
     private Color color;
     @ManyToOne @JoinColumn(nullable = false) @Getter @Setter
     private Talle talle;
+    @ManyToOne @JoinColumn @Getter @Setter
+    private Sucursal sucursal;
+    @OneToOne(mappedBy = "stock") @Getter @Setter
+    private LineaVenta lineaVenta;
     @Column(nullable = false) @Getter @Setter
     private Integer cantidad;
+
 }

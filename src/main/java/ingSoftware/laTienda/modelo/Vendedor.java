@@ -17,4 +17,6 @@ public class Vendedor {
     @Column(nullable = false)
     @Getter @Setter
     private String apellido;
+    @ManyToOne @JoinColumn @Getter @Setter
+    private Sucursal sucursal;
 }

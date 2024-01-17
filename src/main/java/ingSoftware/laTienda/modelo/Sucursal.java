@@ -3,15 +3,14 @@ package ingSoftware.laTienda.modelo;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.List;
-
 @Entity @NoArgsConstructor @AllArgsConstructor @ToString
-public class Talle {
+public class Sucursal {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY) @Getter @Setter
     private Long id;
-    @Column(nullable = false) @Getter @Setter
-    private String descripcion;
-    @ManyToOne @JoinColumn @Getter @Setter
-    private TipoTalle tipoTalle;
-
+    @Column @Getter @Setter
+    private String nombre;
+    @Column @Getter @Setter
+    private String direccion;
+    @ManyToOne @JoinColumn(nullable = false) @Getter @Setter
+    private Tienda tienda;
 }

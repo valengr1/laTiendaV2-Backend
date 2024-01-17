@@ -19,6 +19,8 @@ public class Articulo {
     private Marca marca;
     @ManyToOne @JoinColumn(nullable = false) @Getter @Setter
     private Categoria categoria;
+    @ManyToOne @JoinColumn @Getter @Setter
+    private TipoTalle tipoTalle;
     public Double getPrecio() {
         double netoGravado = costo + costo * margenGanancia;
         double IVA = netoGravado * 0.21;

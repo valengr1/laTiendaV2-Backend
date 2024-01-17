@@ -27,5 +27,4 @@ public class ArticuloControlador {
     public List<Articulo> getArticulos() {
         return articuloServicio.findAll();
     }
-
 }

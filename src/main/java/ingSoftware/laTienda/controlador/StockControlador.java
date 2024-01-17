@@ -1,5 +1,6 @@
 package ingSoftware.laTienda.controlador;
 
+import ingSoftware.laTienda.DTOs.StockDTO;
 import ingSoftware.laTienda.modelo.Stock;
 import ingSoftware.laTienda.servicio.StockServicio;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -16,7 +17,11 @@ public class StockControlador {
         this.stockServicio = stockServicio;
     }
     @GetMapping("/stock")
-    public List<Stock> buscarPorCodigoDeArticulo(@RequestParam Long codigo) {
+    public List<StockDTO> buscarPorCodigoDeArticulo(@RequestParam Long codigo) {
         return stockServicio.buscarPorCodigoDeArticulo(codigo);
+    }
+    @GetMapping("/getAllstock")
+    public List<Stock> getAllStock() {
+        return stockServicio.getAllStock();
     }
 }
