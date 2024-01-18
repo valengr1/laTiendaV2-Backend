@@ -9,8 +9,4 @@ public class CondicionTributaria {
     private Long id;
     @Column @Getter @Setter
     private String descripcion;
-    @OneToOne(mappedBy = "condicionTributaria") @Getter @Setter
-    private Cliente cliente;
-    @OneToOne(mappedBy = "condicionTributaria") @Getter @Setter
-    private Tienda tienda;
 }

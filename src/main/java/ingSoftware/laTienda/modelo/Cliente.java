@@ -15,6 +15,6 @@ public class Cliente {
     private String direccion;
     @Column @Getter @Setter
     private String telefono;
-    @OneToOne @JoinColumn(nullable = false) @Getter @Setter
+    @ManyToOne @JoinColumn(nullable = false) @Getter @Setter
     private CondicionTributaria condicionTributaria;
 }

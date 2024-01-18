@@ -1,6 +1,5 @@
 package ingSoftware.laTienda.servicio;
 
-import ingSoftware.laTienda.controlador.VendedorControlador;
 import ingSoftware.laTienda.modelo.Vendedor;
 import ingSoftware.laTienda.repositorio.VendedorRepositorio;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +12,13 @@ public class VendedorServicio {
     public VendedorServicio(VendedorRepositorio vendedorRepositorio){
         this.vendedorRepositorio = vendedorRepositorio;
     }
-    public Vendedor buscarPorLegajoYContraseña(Long legajo, String contraseña) {
-        return vendedorRepositorio.findByLegajoAndContraseña(legajo, contraseña);
+    public String buscarPorLegajoYContraseña(Long legajo, String contraseña) {
+        Vendedor vendedorEncontrado = vendedorRepositorio.findByLegajoAndContraseña(legajo, contraseña);
+        if(vendedorEncontrado == null){
+            return "Usuario y/o contraseña incorrectos";
+        }
+        else{
+            return "Bienvenido " + vendedorEncontrado.getNombre();
+        }
     }
 }

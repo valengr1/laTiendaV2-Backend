@@ -1,7 +1,5 @@
 package ingSoftware.laTienda.controlador;
 
-import ingSoftware.laTienda.modelo.Vendedor;
-import ingSoftware.laTienda.modelo.VendedorInicioSesion;
 import ingSoftware.laTienda.servicio.VendedorServicio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -14,11 +12,7 @@ public class VendedorControlador {
         this.vendedorServicio = vendedorServicio;
     }
     @GetMapping("/vendedor")
-    public String vendedor(@RequestParam Long legajo, @RequestParam String contraseña){
-        Vendedor v = vendedorServicio.buscarPorLegajoYContraseña(legajo, contraseña);
-        if(v == null){
-            return "Usuario y/o contraseña incorrecto/a";
-        }
-        return "Bienvenido " + v.getNombre();
+    public String getVendedor(@RequestParam Long legajo, @RequestParam String contraseña){
+        return vendedorServicio.buscarPorLegajoYContraseña(legajo, contraseña);
     }
 }

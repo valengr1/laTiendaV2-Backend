@@ -1,6 +1,8 @@
 select * from articulo;
 insert into articulo (descripcion, costo, margen_ganancia, categoria_id, marca_id, tipo_talle_id) 
 			values ('Remera mangas cortas', 30000, 0.7, 6, 1, 1);
+--7: buzo, 2: zapatillas, 10: medias, 11: medias, 12: remera mangas cortas
+
 
 select * from categoria; 
 -- 5: calzados, 6: remeras, 7: pantalones, 8: indumentaria
@@ -14,8 +16,8 @@ update talle set tipo_talle_id = 2 where id >=9;
 
 select * from stock;
 insert into stock (cantidad, articulo_codigo, color_id, talle_id, sucursal_id) 
-			values ();
-			
+			values (10, 7, 4, 10, 1);
+update stock set sucursal_id = 2 where id >=4;		
 
 			
 insert into condicion_tributaria (descripcion) values ('Consumidor Final');
