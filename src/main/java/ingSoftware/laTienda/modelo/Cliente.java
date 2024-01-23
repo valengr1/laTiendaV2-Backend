@@ -5,7 +5,7 @@ import lombok.*;
 
 @Entity @ToString @AllArgsConstructor @NoArgsConstructor
 public class Cliente {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY) @Getter @Setter
+    @Id @Getter @Setter
     private Long DNI;
     @Column @Getter @Setter
     private String nombre;
