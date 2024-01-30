@@ -20,6 +20,11 @@ public class StockControlador {
     public List<StockDTO> buscarPorCodigoDeArticulo(@RequestParam Long codigo) {
         return stockServicio.buscarPorCodigoDeArticulo(codigo);
     }
+
+    @GetMapping("/stockBySucursal")
+    public List<StockDTO> buscarPorCodigoDeArticuloAndSucursal(@RequestParam Long codigoArticulo, @RequestParam Long legajoVendedor) {
+        return stockServicio.buscarPorCodigoDeArticuloAndSucursal(codigoArticulo, legajoVendedor);
+    }
     @GetMapping("/getAllstock")
     public List<Stock> getAllStock() {
         return stockServicio.getAllStock();
