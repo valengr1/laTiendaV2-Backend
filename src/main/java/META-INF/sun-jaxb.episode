@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<bindings xmlns="http://java.sun.com/xml/ns/jaxb" if-exists="true" version="2.1">
+      
+    <!--
+
+Este archivo ha sido generado por Eclipse Implementation of JAXB v2.3.7 
+Visite https://eclipse-ee4j.github.io/jaxb-ri 
+Todas las modificaciones realizadas en este archivo se perderán si se vuelve a compilar el esquema de origen. 
+Generado el: 2024.02.05 a las 04:56:57 PM ART 
+
+  -->
+      
+    <bindings xmlns:tns="http://ISTP1.Service.Contracts.Service" if-exists="true" scd="x-schema::tns">
+            
+        <schemaBindings map="false">
+                  
+            <package name="ingSoftware.laTienda.wsdl"/>
+                
+        </schemaBindings>
+            
+        <bindings if-exists="true" scd="tns:SolicitarAutorizacion">
+                  
+            <class ref="ingSoftware.laTienda.wsdl.SolicitarAutorizacion"/>
+                
+        </bindings>
+            
+        <bindings if-exists="true" scd="tns:SolicitarAutorizacionResponse">
+                  
+            <class ref="ingSoftware.laTienda.wsdl.SolicitarAutorizacionResponse"/>
+                
+        </bindings>
+            
+        <bindings if-exists="true" scd="tns:SolicitarUltimosComprobantes">
+                  
+            <class ref="ingSoftware.laTienda.wsdl.SolicitarUltimosComprobantes"/>
+                
+        </bindings>
+            
+        <bindings if-exists="true" scd="tns:SolicitarUltimosComprobantesResponse">
+                  
+            <class ref="ingSoftware.laTienda.wsdl.SolicitarUltimosComprobantesResponse"/>
+                
+        </bindings>
+            
+        <bindings if-exists="true" scd="tns:SolicitarCae">
+                  
+            <class ref="ingSoftware.laTienda.wsdl.SolicitarCae"/>
+                
+        </bindings>
+            
+        <bindings if-exists="true" scd="tns:SolicitarCaeResponse">
+                  
+            <class ref="ingSoftware.laTienda.wsdl.SolicitarCaeResponse"/>
+                
+        </bindings>
+          
+    </bindings>
+      
+    <bindings xmlns:tns="http://schemas.datacontract.org/2004/07/SGE.Service.Contracts.Data" if-exists="true" scd="x-schema::tns">
+            
+        <schemaBindings map="false">
+                  
+            <package name="ingSoftware.laTienda.wsdl"/>
+                
+        </schemaBindings>
+            
+        <bindings if-exists="true" scd="~tns:Autorizacion">
+                  
+            <class ref="ingSoftware.laTienda.wsdl.Autorizacion"/>
+                
+        </bindings>
+            
+        <bindings if-exists="true" scd="~tns:UltimoComprobante">
+                  
+            <class ref="ingSoftware.laTienda.wsdl.UltimoComprobante"/>
+                
+        </bindings>
+            
+        <bindings if-exists="true" scd="~tns:SolicitudAutorizacion">
+                  
+            <class ref="ingSoftware.laTienda.wsdl.SolicitudAutorizacion"/>
+                
+        </bindings>
+            
+        <bindings if-exists="true" scd="~tns:ResultadoSolicitudAutorizacion">
+                  
+            <class ref="ingSoftware.laTienda.wsdl.ResultadoSolicitudAutorizacion"/>
+                
+        </bindings>
+            
+        <bindings if-exists="true" scd="~tns:ArrayOfComprobante">
+                  
+            <class ref="ingSoftware.laTienda.wsdl.ArrayOfComprobante"/>
+                
+        </bindings>
+            
+        <bindings if-exists="true" scd="~tns:Comprobante">
+                  
+            <class ref="ingSoftware.laTienda.wsdl.Comprobante"/>
+                
+        </bindings>
+          
+    </bindings>
+      
+    <bindings xmlns:tns="http://schemas.datacontract.org/2004/07/SGE.Fwk.Domain.Core" if-exists="true" scd="x-schema::tns">
+            
+        <schemaBindings map="false">
+                  
+            <package name="ingSoftware.laTienda.wsdl"/>
+                
+        </schemaBindings>
+            
+        <bindings if-exists="true" scd="~tns:TipoComprobante">
+                  
+            <typesafeEnumClass ref="ingSoftware.laTienda.wsdl.TipoComprobante"/>
+                
+        </bindings>
+            
+        <bindings if-exists="true" scd="~tns:TipoDocumento">
+                  
+            <typesafeEnumClass ref="ingSoftware.laTienda.wsdl.TipoDocumento"/>
+                
+        </bindings>
+            
+        <bindings if-exists="true" scd="~tns:EstadoSolicitud">
+                  
+            <typesafeEnumClass ref="ingSoftware.laTienda.wsdl.EstadoSolicitud"/>
+                
+        </bindings>
+          
+    </bindings>
+    
+</bindings>
