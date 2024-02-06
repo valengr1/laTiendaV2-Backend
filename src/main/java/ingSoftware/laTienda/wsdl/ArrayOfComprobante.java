@@ -2,7 +2,7 @@
 // Este archivo ha sido generado por Eclipse Implementation of JAXB v2.3.7 
 // Visite https://eclipse-ee4j.github.io/jaxb-ri 
 // Todas las modificaciones realizadas en este archivo se perderán si se vuelve a compilar el esquema de origen. 
-// Generado el: 2024.02.05 a las 04:56:57 PM ART 
+// Generado el: 2024.02.05 a las 08:40:28 PM ART 
 //
 
 
@@ -49,7 +49,7 @@ public class ArrayOfComprobante {
      * 
      * <p>
      * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore, any modification you make to the
+     * not a snapshot. Therefore any modification you make to the
      * returned list will be present inside the JAXB object.
      * This is why there is not a <CODE>set</CODE> method for the comprobante property.
      * 
