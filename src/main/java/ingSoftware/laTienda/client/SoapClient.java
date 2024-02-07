@@ -8,11 +8,14 @@ import org.springframework.ws.client.core.support.WebServiceGatewaySupport;
 import org.springframework.ws.soap.client.core.SoapActionCallback;
 
 public class SoapClient extends WebServiceGatewaySupport {
-    public SolicitarAutorizacionResponse solicitarAutorizacion(JAXBElement<String> codigo){
-        SolicitarAutorizacion solicitarAutorizacion = new SolicitarAutorizacion();
-        solicitarAutorizacion.setCodigo(codigo);
-        SoapActionCallback actionCallback = new SoapActionCallback("http://ISTP1.Service.Contracts.Service/SolicitarAutorizacion");
-        return (SolicitarAutorizacionResponse) getWebServiceTemplate().marshalSendAndReceive("http://istp1service.azurewebsites.net/LoginService.svc", solicitarAutorizacion, actionCallback);
+    public SolicitarAutorizacionResponse solicitarAutorizacion(String codigo){
+        SolicitarAutorizacion autorizacionRequest = new SolicitarAutorizacion();
+        ObjectFactory factory = new ObjectFactory();
+        JAXBElement<String> codigoJaxb = factory.createSolicitarAutorizacionCodigo(codigo);
+        autorizacionRequest.setCodigo(codigoJaxb);
+
+        SoapActionCallback actionCallback = new SoapActionCallback("http://ISTP1.Service.Contracts.Service/ILoginService/SolicitarAutorizacion");
+        return (SolicitarAutorizacionResponse) getWebServiceTemplate().marshalSendAndReceive("http://istp1service.azurewebsites.net/LoginService.svc", autorizacionRequest, actionCallback);
 
     }
 }
