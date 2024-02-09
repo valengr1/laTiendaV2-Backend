@@ -35,7 +35,7 @@ public enum TipoComprobante {
     FACTURA_A("FacturaA"),
     @XmlEnumValue("FacturaB")
     FACTURA_B("FacturaB");
-    private final String value;
+    public final String value;
 
     TipoComprobante(String v) {
         value = v;

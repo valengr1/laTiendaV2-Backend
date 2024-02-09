@@ -55,11 +55,6 @@ public class SoapControlador {
         SolicitarUltimosComprobantesResponse solicitarUltimosComprobantesResponse = solicitarUltimosComprobantes();
         ArrayOfComprobante comprobantes = solicitarUltimosComprobantesResponse.getSolicitarUltimosComprobantesResult().getValue().getComprobantes().getValue();
         long numero = 1L;
-//        for(Comprobante comprobante : comprobantes.getComprobante()){
-//            if(comprobante.getId().equals(tipoComprobanteId)){
-//                 numero = comprobante.getNumero();
-//            }
-//        }
         double importeIva = importeTotal * 0.21;
         double importeNeto = importeTotal - importeIva;
         SolicitudAutorizacion solicitudAutorizacion = new SolicitudAutorizacion();
