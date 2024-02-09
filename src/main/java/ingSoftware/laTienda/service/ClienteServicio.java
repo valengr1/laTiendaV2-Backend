@@ -27,7 +27,13 @@ public class ClienteServicio {
     }
 
     public String registrarCliente(Cliente cliente) {
-        clienteRepositorio.save(cliente);
-        return "Cliente registrado";
+        Cliente clienteEncontrado = clienteRepositorio.findClienteByDNI(cliente.getDNI());
+        if (clienteEncontrado != null) {
+            return "El cliente que desea registrar ya se encuentra registrado";
+        } else{
+            clienteRepositorio.save(cliente);
+            return "Cliente registrado";
+        }
+
     }
 }

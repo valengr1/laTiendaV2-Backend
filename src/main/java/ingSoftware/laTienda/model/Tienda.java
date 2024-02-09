@@ -3,16 +3,18 @@ package ingSoftware.laTienda.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+@Setter
+@Getter
 @Entity @ToString @AllArgsConstructor @NoArgsConstructor
 public class Tienda {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY) @Getter @Setter
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long CUIT;
-    @Column @Getter @Setter
+    @Column
     private String nombre;
-    @Column @Getter @Setter
+    @Column
     private String direccion;
-    @Column @Getter @Setter
+    @Column
     private String telefono;
-    @ManyToOne @JoinColumn(nullable = false) @Getter @Setter
+    @ManyToOne @JoinColumn(nullable = false)
     private CondicionTributaria condicionTributaria;
 }
