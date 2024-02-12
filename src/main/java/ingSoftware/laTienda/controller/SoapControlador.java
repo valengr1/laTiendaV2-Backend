@@ -39,67 +39,91 @@ public class SoapControlador {
     }
 
     @GetMapping("/solicitarCae")
-    public SolicitarCaeResponse solicitarCae(@RequestParam Double importeTotal, @RequestParam Long numeroDocumentoCliente) throws DatatypeConfigurationException, ParseException {
-        //obtener token
+    public SolicitarCaeResponse solicitarCae(@RequestParam String tipoComprobante, @RequestParam String tipoDocumento, @RequestParam Long numeroDocumento, @RequestParam double importeTotal) throws Exception {
         SolicitarAutorizacionResponse solicitarAutorizacionResponse = soapClient.solicitarAutorizacion(System.getenv("codigoGrupoIS"));
         String token = solicitarAutorizacionResponse.getSolicitarAutorizacionResult().getValue().getToken().getValue();
-        //construir solicitud de autorizacion
-        String tipoComprobanteDeterminado = determinarTipoComprobante(numeroDocumentoCliente);
-        TipoComprobante tipoComprobante = TipoComprobante.fromValue(tipoComprobanteDeterminado);
-        Integer tipoComprobanteId = determinarTipoComprobanteId(numeroDocumentoCliente);
-        TipoDocumento tipoDocumentoCliente = determinarTipoDocumentoCliente(numeroDocumentoCliente.toString());
+
+        TipoDocumento tipoDocumentoSolicitud = switch (tipoDocumento) {
+            case "DNI" -> TipoDocumento.DNI;
+            case "CUIT" -> TipoDocumento.CUIT;
+            case "CUIL" -> TipoDocumento.CUIL;
+            case "CONSUMIDOR FINAL" -> TipoDocumento.CONSUMIDOR_FINAL;
+            default -> throw new IllegalStateException("Unexpected value: " + tipoDocumento);
+        };
+
+        Long numeroDocumentoSolicitud = getNumeroDocumentoSolicitud(tipoDocumento, numeroDocumento);
+
+        TipoComprobante tipoComprobanteSolicitud = switch (tipoComprobante){
+            case "FACTURA_A" -> TipoComprobante.FACTURA_A;
+            case "FACTURA_B" -> TipoComprobante.FACTURA_B;
+            default -> throw new IllegalStateException("Unexpected value: " + tipoComprobante);
+        };
+
+        double importeIva = redondearDecimales(importeTotal * 0.21, 2);
+        double importeNeto = redondearDecimales(importeTotal - importeIva, 2);
+        double importeTotalRedondeado = redondearDecimales(importeTotal, 2);
+
         GregorianCalendar ahora = new GregorianCalendar(TimeZone.getTimeZone("GMT-3"));
         XMLGregorianCalendar fecha = DatatypeFactory.newInstance().newXMLGregorianCalendar(ahora);
+
         ObjectFactory factory = new ObjectFactory();
         JAXBElement<XMLGregorianCalendar> fechaJaxb = factory.createSolicitudAutorizacionFecha(fecha);
-        SolicitarUltimosComprobantesResponse solicitarUltimosComprobantesResponse = solicitarUltimosComprobantes();
-        ArrayOfComprobante comprobantes = solicitarUltimosComprobantesResponse.getSolicitarUltimosComprobantesResult().getValue().getComprobantes().getValue();
-        long numero = 1L;
-        double importeIva = importeTotal * 0.21;
-        double importeNeto = importeTotal - importeIva;
-        SolicitudAutorizacion solicitudAutorizacion = new SolicitudAutorizacion();
-        solicitudAutorizacion.setImporteTotal(formatearDecimales(importeTotal, 2));
-        solicitudAutorizacion.setImporteIva(formatearDecimales(importeIva, 2));
-        solicitudAutorizacion.setImporteNeto(formatearDecimales(importeNeto, 2));
-        solicitudAutorizacion.setNumeroDocumento(numeroDocumentoCliente);
-        solicitudAutorizacion.setTipoComprobante(tipoComprobante);
-        solicitudAutorizacion.setTipoDocumento(tipoDocumentoCliente);
-        solicitudAutorizacion.setFecha(fechaJaxb);
-        solicitudAutorizacion.setNumero(numero);
-        //solicitar CAE
+
+        SolicitudAutorizacion solicitudAutorizacion = getSolicitudAutorizacion(tipoComprobanteSolicitud, tipoDocumentoSolicitud, numeroDocumentoSolicitud, importeTotalRedondeado, importeNeto, importeIva, fechaJaxb);
         return soapClient.solicitarCae(token, solicitudAutorizacion);
     }
 
-
-    private String determinarTipoComprobante(Long numeroDocumentoCliente) {
-        Cliente cliente = clienteServicio.obtenerClienteByDNI(numeroDocumentoCliente);
-        if(cliente.getCondicionTributaria().getDescripcion().equals("Responsable Inscripto") || cliente.getCondicionTributaria().getDescripcion().equals("Monotributo")){
-            return "FacturaA"; //tipo de factura A
-        } else {
-            return "FacturaB"; // tipo de factura B
+    private static Long getNumeroDocumentoSolicitud(String tipoDocumento, Long numeroDocumento) {
+        Long numeroDocumentoSolicitud = null;
+        boolean numeroDocumentoComprobacion = switch (tipoDocumento){
+            case "DNI" -> numeroDocumento.toString().length() == 7 || numeroDocumento.toString().length() == 8;
+            case "CUIT", "CUIL" -> numeroDocumento.toString().length() == 11;
+            case "CONSUMIDOR FINAL" -> numeroDocumento == 0;
+            default -> throw new IllegalStateException("Unexpected value: " + numeroDocumento);
+        };
+        if(numeroDocumentoComprobacion){
+            numeroDocumentoSolicitud = numeroDocumento;
+        } else{
+            throw new IllegalArgumentException("Unexpected value: " + numeroDocumento);
         }
+        return numeroDocumentoSolicitud;
     }
 
-    public Double formatearDecimales(Double numero, Integer numeroDecimales) {
-        return Math.round(numero * Math.pow(10, numeroDecimales)) / Math.pow(10, numeroDecimales);
-    }
-
-    private Integer determinarTipoComprobanteId(Long numeroDocumentoCliente) {
-        Cliente cliente = clienteServicio.obtenerClienteByDNI(numeroDocumentoCliente);
-        if(cliente.getCondicionTributaria().getDescripcion().equals("Responsable Inscripto") || cliente.getCondicionTributaria().getDescripcion().equals("Monotributo")){
-            return 1; //tipo de factura A
-        } else {
-            return 6; // tipo de factura B
+    private static SolicitudAutorizacion getSolicitudAutorizacion(TipoComprobante tipoComprobante, TipoDocumento tipoDocumento,Long numeroDocumento,double importeTotal, double importeNeto, double importeIva, JAXBElement<XMLGregorianCalendar> fechaJaxb) throws Exception {
+        if(tipoComprobante.value() == null){
+            throw new Exception("El tipo de comprobante es erróneo");
         }
+        SolicitudAutorizacion solicitudAutorizacion = new SolicitudAutorizacion();
+        solicitudAutorizacion.setImporteTotal(importeTotal);
+        solicitudAutorizacion.setImporteIva(importeIva);
+        solicitudAutorizacion.setImporteNeto(importeNeto);
+        solicitudAutorizacion.setNumeroDocumento(numeroDocumento);
+        solicitudAutorizacion.setTipoComprobante(tipoComprobante);
+        solicitudAutorizacion.setTipoDocumento(tipoDocumento);
+        solicitudAutorizacion.setFecha(fechaJaxb);
+        solicitudAutorizacion.setNumero(2L);
+        return solicitudAutorizacion;
     }
 
-    private TipoDocumento determinarTipoDocumentoCliente(String numeroDocumentoCliente) {
-         if(numeroDocumentoCliente.length() == 7 || numeroDocumentoCliente.length() == 8){
-            return TipoDocumento.DNI;
-        } else if(numeroDocumentoCliente.length() == 11){
-            return TipoDocumento.CUIT;
-        } else {
-            return TipoDocumento.CONSUMIDOR_FINAL;
-         }
+    public double redondearDecimales(double valorInicial, int numeroDecimales) {
+        double parteEntera, resultado;
+        resultado = valorInicial;
+        parteEntera = Math.floor(resultado);
+        resultado=(resultado-parteEntera)*Math.pow(10, numeroDecimales);
+        resultado=Math.round(resultado);
+        resultado=(resultado/Math.pow(10, numeroDecimales))+parteEntera;
+        return resultado;
     }
+
+//        String tipoComprobanteDeterminado = determinarTipoComprobante(numeroDocumentoCliente);
+//        TipoComprobante tipoComprobante = TipoComprobante.fromValue(tipoComprobanteDeterminado);
+//        Integer tipoComprobanteId = determinarTipoComprobanteId(numeroDocumentoCliente);
+//        TipoDocumento tipoDocumentoCliente = determinarTipoDocumentoCliente(numeroDocumentoCliente.toString());
+//        SolicitarUltimosComprobantesResponse solicitarUltimosComprobantesResponse = solicitarUltimosComprobantes();
+//        ArrayOfComprobante comprobantes = solicitarUltimosComprobantesResponse.getSolicitarUltimosComprobantesResult().getValue().getComprobantes().getValue();
+//        long numero = 1L;
+//        double importeIva = importeTotal * 0.21;
+//        double importeNeto = importeTotal - importeIva;
+
+
 }
