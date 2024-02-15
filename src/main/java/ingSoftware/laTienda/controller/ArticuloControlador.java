@@ -4,10 +4,7 @@ import ingSoftware.laTienda.DTOs.ArticuloDTO;
 import ingSoftware.laTienda.model.Articulo;
 import ingSoftware.laTienda.service.ArticuloServicio;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -26,5 +23,20 @@ public class ArticuloControlador {
     @GetMapping("/getArticulos")
     public List<Articulo> getArticulos() {
         return articuloServicio.findAll();
+    }
+
+    @PostMapping("/agregarArticulo")
+    public String agregarArticulo(@RequestBody Articulo articulo){
+        return articuloServicio.agregarArticulo(articulo);
+    }
+
+    @PutMapping("/modificarArticulo")
+    public String modificarArticulo(@RequestBody Articulo articulo){
+        return articuloServicio.modificarArticulo(articulo);
+    }
+
+    @DeleteMapping("eliminarArticulo")
+    public String eliminarArticuloByCodigo(@RequestParam Long codigo){
+        return articuloServicio.eliminarArticuloByCodigo(codigo);
     }
 }

@@ -7,7 +7,7 @@ import lombok.*;
 @Getter
 @Entity @NoArgsConstructor @AllArgsConstructor @ToString
 public class Articulo {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
     private Long codigo;
     @Column(nullable = false)
     private String descripcion;

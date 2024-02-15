@@ -70,9 +70,8 @@ public class SoapControlador {
         JAXBElement<XMLGregorianCalendar> fechaJaxb = factory.createSolicitudAutorizacionFecha(fecha);
 
         SolicitudAutorizacion solicitudAutorizacion = getSolicitudAutorizacion(tipoComprobanteSolicitud, tipoDocumentoSolicitud, numeroDocumentoSolicitud, importeTotalRedondeado, importeNeto, importeIva, fechaJaxb);
-        return soapClient.solicitarCae(token, solicitudAutorizacion);
+        return soapClient.solicitarCae(token,solicitudAutorizacion);
     }
-
     private static Long getNumeroDocumentoSolicitud(String tipoDocumento, Long numeroDocumento) {
         Long numeroDocumentoSolicitud = null;
         boolean numeroDocumentoComprobacion = switch (tipoDocumento){
@@ -90,9 +89,6 @@ public class SoapControlador {
     }
 
     private static SolicitudAutorizacion getSolicitudAutorizacion(TipoComprobante tipoComprobante, TipoDocumento tipoDocumento,Long numeroDocumento,double importeTotal, double importeNeto, double importeIva, JAXBElement<XMLGregorianCalendar> fechaJaxb) throws Exception {
-        if(tipoComprobante.value() == null){
-            throw new Exception("El tipo de comprobante es erróneo");
-        }
         SolicitudAutorizacion solicitudAutorizacion = new SolicitudAutorizacion();
         solicitudAutorizacion.setImporteTotal(importeTotal);
         solicitudAutorizacion.setImporteIva(importeIva);

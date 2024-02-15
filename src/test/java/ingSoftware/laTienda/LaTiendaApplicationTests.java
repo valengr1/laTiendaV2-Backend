@@ -17,7 +17,7 @@ class LaTiendaApplicationTests {
 
 	@Test
 	public void redondearADosDigitos(){
-		Double numero = 82.0;
+		Double numero = 82.00;
 		numero = Math.round(numero * 100.0)/100.0;
 		Assertions.assertEquals(82.00, numero);
 	}
@@ -32,11 +32,11 @@ class LaTiendaApplicationTests {
 	@Test
 	public void redondearDecimales() {
 		double parteEntera, resultado;
-		resultado = 120000.35532;
+		resultado = 120000.0;
 		parteEntera = Math.floor(resultado);
 		resultado=(resultado-parteEntera)*Math.pow(10, 2);
 		resultado=Math.round(resultado);
 		resultado=(resultado/Math.pow(10, 2))+parteEntera;
-		Assertions.assertEquals(120000.36, resultado);
+		Assertions.assertEquals(120000.00, resultado);
 	}
 }

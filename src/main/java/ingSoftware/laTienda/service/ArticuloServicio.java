@@ -33,4 +33,31 @@ public class ArticuloServicio {
     public List<Articulo> findAll() {
         return articuloRepositorio.findAll();
     }
+
+    public String agregarArticulo(Articulo articulo) {
+        Articulo articuloYaExistente = articuloRepositorio.findArticuloByCodigo(articulo.getCodigo());
+        if(articuloYaExistente == null){
+            articuloRepositorio.save(articulo);
+            return "Artículo agregado correctamente";
+        } else{
+            return "Ya existe un artículo con el código " + articulo.getCodigo();
+        }
+    }
+    public String modificarArticulo(Articulo articulo) {
+        Articulo articuloExistente = articuloRepositorio.findArticuloByCodigo(articulo.getCodigo());
+        if(articuloExistente == null){
+            return "No existe el artículo con código " + articulo.getCodigo();
+        }
+        articuloRepositorio.save(articulo);
+        return "Articulo modificado correctamente";
+    }
+
+    public String eliminarArticuloByCodigo(Long codigo) {
+        Articulo articuloExistente = articuloRepositorio.findArticuloByCodigo(codigo);
+        if(articuloExistente == null){
+            return "No existe el artículo con código " + codigo;
+        }
+        articuloRepositorio.deleteById(codigo);
+        return "Articulo eliminado correctamente";
+    }
 }
