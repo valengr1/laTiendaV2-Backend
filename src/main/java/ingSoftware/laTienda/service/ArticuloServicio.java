@@ -4,6 +4,7 @@ import ingSoftware.laTienda.DTOs.ArticuloDTO;
 import ingSoftware.laTienda.model.Articulo;
 import ingSoftware.laTienda.repository.ArticuloRepositorio;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -35,8 +36,8 @@ public class ArticuloServicio {
     }
 
     public String agregarArticulo(Articulo articulo) {
-        Articulo articuloYaExistente = articuloRepositorio.findArticuloByCodigo(articulo.getCodigo());
-        if(articuloYaExistente == null){
+        Articulo articuloEnDB = articuloRepositorio.findArticuloByCodigo(articulo.getCodigo());
+        if(articuloEnDB == null){
             articuloRepositorio.save(articulo);
             return "Artículo agregado correctamente";
         } else{
@@ -59,5 +60,9 @@ public class ArticuloServicio {
         }
         articuloRepositorio.deleteById(codigo);
         return "Articulo eliminado correctamente";
+    }
+
+    public Articulo getArticuloByCodigo(Long codigo) {
+        return articuloRepositorio.findArticuloByCodigo(codigo);
     }
 }

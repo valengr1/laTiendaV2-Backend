@@ -25,6 +25,10 @@ public class ArticuloControlador {
         return articuloServicio.findAll();
     }
 
+    @GetMapping("/getArticuloByCodigo")
+    public Articulo getArticuloByCodigo(@RequestParam Long codigo){
+        return articuloServicio.getArticuloByCodigo(codigo);
+    }
     @PostMapping("/agregarArticulo")
     public String agregarArticulo(@RequestBody Articulo articulo){
         return articuloServicio.agregarArticulo(articulo);
