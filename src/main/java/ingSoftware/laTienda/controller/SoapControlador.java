@@ -5,6 +5,7 @@ import ingSoftware.laTienda.model.Cliente;
 import ingSoftware.laTienda.service.ClienteServicio;
 import ingSoftware.laTienda.wsdl.*;
 import jakarta.xml.bind.JAXBElement;
+import org.antlr.v4.runtime.Token;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -59,8 +60,8 @@ public class SoapControlador {
             default -> throw new IllegalStateException("Unexpected value: " + tipoComprobante);
         };
 
-        double importeIva = redondearDecimales(importeTotal * 0.21, 2);
-        double importeNeto = redondearDecimales(importeTotal - importeIva, 2);
+        double importeIvaRedondeado = redondearDecimales(importeTotal * 0.21, 2);
+        double importeNetoRedondeado = redondearDecimales(importeTotal - importeIvaRedondeado, 2);
         double importeTotalRedondeado = redondearDecimales(importeTotal, 2);
 
         GregorianCalendar ahora = new GregorianCalendar(TimeZone.getTimeZone("GMT-3"));
@@ -69,8 +70,8 @@ public class SoapControlador {
         ObjectFactory factory = new ObjectFactory();
         JAXBElement<XMLGregorianCalendar> fechaJaxb = factory.createSolicitudAutorizacionFecha(fecha);
 
-        SolicitudAutorizacion solicitudAutorizacion = getSolicitudAutorizacion(tipoComprobanteSolicitud, tipoDocumentoSolicitud, numeroDocumentoSolicitud, importeTotalRedondeado, importeNeto, importeIva, fechaJaxb);
-        return soapClient.solicitarCae(token,solicitudAutorizacion);
+        SolicitudAutorizacion solicitudAutorizacion = getSolicitudAutorizacion(tipoComprobanteSolicitud, tipoDocumentoSolicitud, numeroDocumentoSolicitud, importeTotalRedondeado, importeNetoRedondeado, importeIvaRedondeado, fechaJaxb);
+        return soapClient.solicitarCae(token, solicitudAutorizacion);
     }
     private static Long getNumeroDocumentoSolicitud(String tipoDocumento, Long numeroDocumento) {
         Long numeroDocumentoSolicitud = null;
@@ -110,16 +111,4 @@ public class SoapControlador {
         resultado=(resultado/Math.pow(10, numeroDecimales))+parteEntera;
         return resultado;
     }
-
-//        String tipoComprobanteDeterminado = determinarTipoComprobante(numeroDocumentoCliente);
-//        TipoComprobante tipoComprobante = TipoComprobante.fromValue(tipoComprobanteDeterminado);
-//        Integer tipoComprobanteId = determinarTipoComprobanteId(numeroDocumentoCliente);
-//        TipoDocumento tipoDocumentoCliente = determinarTipoDocumentoCliente(numeroDocumentoCliente.toString());
-//        SolicitarUltimosComprobantesResponse solicitarUltimosComprobantesResponse = solicitarUltimosComprobantes();
-//        ArrayOfComprobante comprobantes = solicitarUltimosComprobantesResponse.getSolicitarUltimosComprobantesResult().getValue().getComprobantes().getValue();
-//        long numero = 1L;
-//        double importeIva = importeTotal * 0.21;
-//        double importeNeto = importeTotal - importeIva;
-
-
 }
