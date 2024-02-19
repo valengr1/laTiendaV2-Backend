@@ -15,7 +15,7 @@ public class MarcaControlador {
     public MarcaControlador(MarcaServicio marcaServicio){
         this.marcaServicio = marcaServicio;
     }
-    @GetMapping("/getMarcas")
+    @GetMapping("/api/marca/listar")
     public List<Marca> getMarcas(){
         return marcaServicio.getMarcas();
     }

@@ -19,7 +19,7 @@ public class CategoriaControlador {
         this.categoriaServicio = categoriaServicio;
     }
 
-    @GetMapping("/getCategorias")
+    @GetMapping("/api/categoria/listar")
     public List<Categoria> getCategorias(){
         return categoriaServicio.getCategorias();
     }

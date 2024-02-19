@@ -17,12 +17,12 @@ public class ComprobanteController {
         this.comprobanteServicio = comprobanteServicio;
     }
 
-    @GetMapping("/listarComprobantes")
+    @GetMapping("/api/comprobante/listar")
     public List<Comprobante> listarComprobantes(){
         return comprobanteServicio.listarComprobantes();
     }
 
-    @GetMapping("/determinarTipoComprobanteAEmitir")
+    @GetMapping("/api/comprobante/determinarTipoComprobanteAEmitir")
     public String determinarTipoComprobanteAEmitir(@RequestParam Long idCondicionTributariaCliente){
         return comprobanteServicio.determinarTipoComprobanteAEmitir(idCondicionTributariaCliente);
     }

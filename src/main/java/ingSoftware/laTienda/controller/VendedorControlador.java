@@ -11,7 +11,7 @@ public class VendedorControlador {
     public VendedorControlador(VendedorServicio vendedorServicio){
         this.vendedorServicio = vendedorServicio;
     }
-    @GetMapping("/vendedor")
+    @GetMapping("/api/vendedor/buscarByLegajoAndContraseña")
     public String getVendedor(@RequestParam Long legajo, @RequestParam String contraseña){
         return vendedorServicio.buscarPorLegajoYContraseña(legajo, contraseña);
     }

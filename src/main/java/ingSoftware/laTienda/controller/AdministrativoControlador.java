@@ -15,12 +15,12 @@ public class AdministrativoControlador {
         this.administrativoServicio = administrativoServicio;
     }
 
-    @GetMapping("/listarAdministrativos")
+    @GetMapping("/api/administrativo/listar")
     public List<Administrativo> listarAdministrativos(){
         return administrativoServicio.listarAdministrativos();
     }
 
-    @GetMapping("/buscarByCredenciales")
+    @GetMapping("/api/administrativo/buscarByLegajoAndContraseña")
     public String buscarByLegajoAndContraseña(@RequestParam Long legajo, @RequestParam String contraseña){
         return administrativoServicio.buscarPorLegajoYContraseña(legajo,contraseña);
     }}

@@ -16,16 +16,16 @@ public class StockControlador {
     public StockControlador(StockServicio stockServicio) {
         this.stockServicio = stockServicio;
     }
-    @GetMapping("/stock")
-    public List<StockDTO> buscarPorCodigoDeArticulo(@RequestParam Long codigo) {
-        return stockServicio.buscarPorCodigoDeArticulo(codigo);
-    }
+//    @GetMapping("/api/stock")
+//    public List<StockDTO> buscarPorCodigoDeArticulo(@RequestParam Long codigo) {
+//        return stockServicio.buscarPorCodigoDeArticulo(codigo);
+//    }
 
-    @GetMapping("/stockBySucursal")
+    @GetMapping("/api/stock/buscarBySucursal")
     public List<StockDTO> buscarPorCodigoDeArticuloAndSucursal(@RequestParam Long codigoArticulo, @RequestParam Long legajoVendedor) {
         return stockServicio.buscarPorCodigoDeArticuloAndSucursal(codigoArticulo, legajoVendedor);
     }
-    @GetMapping("/getAllstock")
+    @GetMapping("/api/stock/listar")
     public List<Stock> getAllStock() {
         return stockServicio.getAllStock();
     }

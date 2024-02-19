@@ -16,7 +16,7 @@ public class CondicionTributariaControlador {
     public CondicionTributariaControlador(CondicionTributariaServicio condicionTributariaServicio) {
         this.condicionTributariaServicio = condicionTributariaServicio;
     }
-    @GetMapping("/condicionesTributarias")
+    @GetMapping("/api/condicionTributaria/listar")
     public List<CondicionTributaria> obtenerCondicionesTributarias() {
         return condicionTributariaServicio.obtenerCondicionesTributarias();
     }

@@ -32,14 +32,14 @@ public class SoapControlador {
         this.clienteServicio = clienteServicio;
     }
 
-    @GetMapping("/solicitarUltimosComprobantes")
+    @GetMapping("/api/solicitarUltimosComprobantes")
     public SolicitarUltimosComprobantesResponse solicitarUltimosComprobantes(){
         SolicitarAutorizacionResponse solicitarAutorizacionResponse = soapClient.solicitarAutorizacion(System.getenv("codigoGrupoIS"));
         String token = solicitarAutorizacionResponse.getSolicitarAutorizacionResult().getValue().getToken().getValue();
         return soapClient.solicitarUltimosComprobantes(token);
     }
 
-    @GetMapping("/solicitarCae")
+    @GetMapping("/api/solicitarCae")
     public SolicitarCaeResponse solicitarCae(@RequestParam String tipoComprobante, @RequestParam String tipoDocumento, @RequestParam Long numeroDocumento, @RequestParam double importeTotal) throws Exception {
         SolicitarAutorizacionResponse solicitarAutorizacionResponse = soapClient.solicitarAutorizacion(System.getenv("codigoGrupoIS"));
         String token = solicitarAutorizacionResponse.getSolicitarAutorizacionResult().getValue().getToken().getValue();
@@ -98,7 +98,7 @@ public class SoapControlador {
         solicitudAutorizacion.setTipoComprobante(tipoComprobante);
         solicitudAutorizacion.setTipoDocumento(tipoDocumento);
         solicitudAutorizacion.setFecha(fechaJaxb);
-        solicitudAutorizacion.setNumero(2L);
+        solicitudAutorizacion.setNumero(1L);
         return solicitudAutorizacion;
     }
 

@@ -14,16 +14,16 @@ public class ClienteControlador {
     public ClienteControlador(ClienteServicio clienteServicio) {
         this.clienteServicio = clienteServicio;
     }
-    @GetMapping("/buscarCliente")
+    @GetMapping("/api/cliente/buscarByDNI")
     public Cliente obtenerCliente(@RequestParam String DNI) {
         return clienteServicio.obtenerClienteByDNI(Long.parseLong(DNI));
     }
-    @GetMapping("/clientes")
+    @GetMapping("/api/clientes")
     public List<Cliente> obtenerClientes() {
         return clienteServicio.obtenerClientes();
     }
 
-    @PostMapping("/registrarCliente")
+    @PostMapping("/api/cliente/registrar")
     public String registrarCliente(@RequestBody Cliente cliente) {
         return clienteServicio.registrarCliente(cliente);
     }

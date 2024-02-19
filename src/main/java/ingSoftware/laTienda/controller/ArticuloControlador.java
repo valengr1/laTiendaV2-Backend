@@ -15,31 +15,31 @@ public class ArticuloControlador {
     public ArticuloControlador(ArticuloServicio articuloServicio) {
         this.articuloServicio = articuloServicio;
     }
-    @GetMapping("/articulo")
+    @GetMapping("/api/articulo/buscarByCodigo")
     public ArticuloDTO getArticulo(@RequestParam Long codigo) {
         return articuloServicio.findArticuloByCodigo(codigo);
     }
 
-    @GetMapping("/getArticulos")
+    @GetMapping("/api/articulo/listar")
     public List<Articulo> getArticulos() {
         return articuloServicio.findAll();
     }
 
-    @GetMapping("/getArticuloByCodigo")
+    @GetMapping("/api/articulo/buscarArticuloByCodigo")
     public Articulo getArticuloByCodigo(@RequestParam Long codigo){
         return articuloServicio.getArticuloByCodigo(codigo);
     }
-    @PostMapping("/agregarArticulo")
+    @PostMapping("/api/articulo/agregar")
     public String agregarArticulo(@RequestBody Articulo articulo){
         return articuloServicio.agregarArticulo(articulo);
     }
 
-    @PutMapping("/modificarArticulo")
+    @PutMapping("/api/articulo/modificar")
     public String modificarArticulo(@RequestBody Articulo articulo){
         return articuloServicio.modificarArticulo(articulo);
     }
 
-    @DeleteMapping("eliminarArticulo")
+    @DeleteMapping("/api/articulo/eliminarArticuloByCodigo")
     public String eliminarArticuloByCodigo(@RequestParam Long codigo){
         return articuloServicio.eliminarArticuloByCodigo(codigo);
     }
