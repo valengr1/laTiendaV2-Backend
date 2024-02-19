@@ -2,10 +2,15 @@ package ingSoftware.laTienda.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
+import org.hibernate.annotations.Where;
 
 @Setter
 @Getter
 @Entity @NoArgsConstructor @AllArgsConstructor @ToString
+@SQLDelete(sql = "UPDATE Articulo SET deleted = true WHERE codigo = ?")
+//@SQLRestriction("deleted = false")
 public class Articulo {
     @Id
     private Long codigo;
@@ -21,6 +26,8 @@ public class Articulo {
     private Categoria categoria;
     @ManyToOne @JoinColumn
     private TipoTalle tipoTalle;
+    @Column
+    private Boolean deleted;
     public Double getPrecio() {
         double netoGravado = costo + costo * margenGanancia;
         double IVA = netoGravado * 0.21;

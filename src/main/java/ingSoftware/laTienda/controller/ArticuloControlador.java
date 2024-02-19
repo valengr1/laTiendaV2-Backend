@@ -20,14 +20,22 @@ public class ArticuloControlador {
         return articuloServicio.findArticuloByCodigo(codigo);
     }
 
+    //busca y obtiene todos los artículos.
     @GetMapping("/api/articulo/listar")
     public List<Articulo> getArticulos() {
         return articuloServicio.findAll();
     }
 
+    //busca y obtiene el artículo independientemente de su estado: eliminado lógicamente o no.
     @GetMapping("/api/articulo/buscarArticuloByCodigo")
     public Articulo getArticuloByCodigo(@RequestParam Long codigo){
         return articuloServicio.getArticuloByCodigo(codigo);
+    }
+
+    //busca y obtiene el artículo si no está eliminado lógicamente.
+    @GetMapping("/api/articulo/buscarArticuloByCodigoAndEstado")
+    public Articulo getArticuloByCodigoAndEstado(@RequestParam Long codigo){
+        return articuloServicio.getArticuloByCodigoAndEstado(codigo);
     }
     @PostMapping("/api/articulo/agregar")
     public String agregarArticulo(@RequestBody Articulo articulo){
