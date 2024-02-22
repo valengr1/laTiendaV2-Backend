@@ -5,6 +5,8 @@ import ingSoftware.laTienda.repository.VendedorRepositorio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class VendedorServicio {
     private final VendedorRepositorio vendedorRepositorio;
@@ -20,5 +22,9 @@ public class VendedorServicio {
         else{
             return "Bienvenido " + vendedorEncontrado.getNombre();
         }
+    }
+
+    public List<Vendedor> listar() {
+        return vendedorRepositorio.findAll();
     }
 }

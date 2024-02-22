@@ -19,4 +19,6 @@ public class Venta {
     private Cliente cliente;
     @OneToOne @JoinColumn(nullable = false) @Getter @Setter
     private Pago pago;
+    @Enumerated(EnumType.STRING)
+    private TipoComprobante tipoComprobante;
 }
