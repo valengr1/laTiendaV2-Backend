@@ -1,10 +1,9 @@
 package ingSoftware.laTienda.controller;
 
+import ingSoftware.laTienda.model.Tarjeta;
 import ingSoftware.laTienda.service.AutorizacionPagoServicio;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -17,8 +16,8 @@ public class AutorizacionPagoControlador {
         this.autorizacionPagoServicio = autorizacionPagoServicio;
     }
 
-    @GetMapping("/api/autorizacionPago/solicitarToken")
-    public String solicitarToken() throws URISyntaxException, IOException, InterruptedException {
-        return autorizacionPagoServicio.solicitarTokenPago();
+    @PostMapping("/api/autorizacionPago/solicitarToken")
+    public String solicitarToken(@RequestBody Tarjeta tarjeta, @RequestParam Double monto) throws URISyntaxException, IOException, InterruptedException {
+            return autorizacionPagoServicio.solicitarTokenPago(tarjeta, monto);
     }
 }
