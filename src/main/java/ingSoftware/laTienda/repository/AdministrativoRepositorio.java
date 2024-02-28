@@ -10,4 +10,7 @@ import org.springframework.stereotype.Repository;
 public interface AdministrativoRepositorio extends JpaRepository<Administrativo, Long> {
     @Query("SELECT a FROM Administrativo a WHERE a.legajo = ?1 AND a.contraseña = ?2")
     Administrativo findByLegajoAndContraseña(Long legajo, String contraseña);
+
+    @Query("SELECT a FROM Administrativo a WHERE a.legajo = ?1")
+    Administrativo findByLegajo(Long legajo);
 }

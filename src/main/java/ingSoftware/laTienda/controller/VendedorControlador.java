@@ -18,6 +18,10 @@ public class VendedorControlador {
     public String getVendedor(@RequestParam Long legajo, @RequestParam String contraseña){
         return vendedorServicio.buscarPorLegajoYContraseña(legajo, contraseña);
     }
+    @GetMapping("/api/vendedor/buscarByLegajo")
+    public String buscarByLegajo(@RequestParam Long legajo){
+        return vendedorServicio.buscarPorLegajo(legajo);
+    }
 
     @GetMapping("/api/vendedor/listar")
     public List<Vendedor> listar(){

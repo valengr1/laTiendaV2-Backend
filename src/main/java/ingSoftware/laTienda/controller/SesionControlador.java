@@ -20,6 +20,11 @@ public class SesionControlador {
         return sesionServicio.getSesiones();
     }
 
+    @GetMapping("/api/sesion/buscarSesionByLegajoEmpleado")
+    public String getSesionByLegajo(@RequestParam Long legajo){
+        return sesionServicio.getSesionByLegajo(legajo);
+    }
+
     @PostMapping("/api/sesion/agregar")
     public String postSesion(@RequestParam Long legajo, @RequestParam String password){
         return sesionServicio.postSesion(legajo,password);

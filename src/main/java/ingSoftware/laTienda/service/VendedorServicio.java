@@ -27,4 +27,14 @@ public class VendedorServicio {
     public List<Vendedor> listar() {
         return vendedorRepositorio.findAll();
     }
+
+    public String buscarPorLegajo(Long legajo) {
+        Vendedor vendedorEncontrado = vendedorRepositorio.findByLegajo(legajo);
+        if(vendedorEncontrado == null){
+            return "No autorizado";
+        }
+        else{
+            return "Bienvenido " + vendedorEncontrado.getNombre();
+        }
+    }
 }

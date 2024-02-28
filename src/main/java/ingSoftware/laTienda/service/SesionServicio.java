@@ -71,4 +71,20 @@ public class SesionServicio {
         }
 
     }
+
+    public String getSesionByLegajo(Long legajo) {
+        List<Sesion> sesiones = getSesiones();
+        boolean sesionEncontrada = false;
+        for (Sesion sesion : sesiones){
+            if (sesion.getVendedor().getLegajo().equals(legajo)) {
+                sesionEncontrada = true;
+                break;
+            }
+        }
+        if(sesionEncontrada){
+            return "Ya existe un inicio de sesión con el legajo: "+legajo;
+        } else {
+            return "No existe una sesión iniciada con el legajo: "+legajo;
+        }
+    }
 }

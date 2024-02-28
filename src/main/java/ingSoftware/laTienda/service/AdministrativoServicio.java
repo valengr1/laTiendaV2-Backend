@@ -29,4 +29,14 @@ public class AdministrativoServicio {
             return "Bienvenido " + administrativoEncontrado.getNombre();
         }
     }
+
+    public String buscarPorLegajo(Long legajo) {
+        Administrativo administrativoEncontrado = administrativoRepositorio.findByLegajo(legajo);
+        if(administrativoEncontrado == null){
+            return "No existe el administrativo";
+        }
+        else{
+            return "Existe el administrativo";
+        }
+    }
 }
