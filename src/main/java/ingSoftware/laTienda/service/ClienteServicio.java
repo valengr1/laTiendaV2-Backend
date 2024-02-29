@@ -29,7 +29,7 @@ public class ClienteServicio {
     public String registrarCliente(Cliente cliente) {
         Cliente clienteEncontrado = clienteRepositorio.findClienteByDNI(cliente.getDNI());
         if (clienteEncontrado != null) {
-            return "El cliente que desea registrar ya se encuentra registrado";
+            return "Ya existe un cliente con el DNI: "+cliente.getDNI();
         } else{
             clienteRepositorio.save(cliente);
             return "Cliente registrado";

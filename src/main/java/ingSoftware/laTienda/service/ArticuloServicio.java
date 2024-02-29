@@ -39,7 +39,7 @@ public class ArticuloServicio {
         Articulo articuloEnDB = articuloRepositorio.findArticuloByCodigo(articulo.getCodigo());
         if(articuloEnDB != null){
             if(articuloEnDB.getDeleted()){
-                return "Artículo eliminado lógicamente";
+                return "No se puede agregar un artículo con el código: "+articulo.getCodigo(); //ya que existe un artículo con el mismo código pero eliminado lógicamente
             } else{
                 return "Ya existe un artículo con el código: "+articulo.getCodigo();
             }
@@ -60,8 +60,13 @@ public class ArticuloServicio {
         if(articuloExistente == null){
             return "No existe el artículo con código " + articulo.getCodigo();
         }
-        articuloRepositorio.save(articulo);
-        return "Articulo modificado correctamente";
+        if(articulo.getMargenGanancia() > 0 && articulo.getMargenGanancia() <= 1){
+            articulo.setDeleted(false);
+            articuloRepositorio.save(articulo);
+            return "Articulo modificado correctamente";
+        } else{
+            return "El margen de ganancia debe tener un valor mayor que 0 y menor o igual a 1";
+        }
     }
 
     public String eliminarArticuloByCodigo(Long codigo) {
