@@ -7,8 +7,6 @@ import ingSoftware.laTienda.repository.VendedorRepositorio;
 import ingSoftware.laTienda.repository.VentaRepositorio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -30,7 +28,6 @@ public class VentaServicio {
     }
     public String registrarNuevaVenta( List<StockYCantidad> stocksYCantidades, Long legajoVendedor, Long numeroDocumento) {
         Venta v = new Venta();
-        List<LineaVenta> lineasVenta = new ArrayList<>();
         Cliente cliente = clienteRepositorio.findClienteByDNI(numeroDocumento);
         Vendedor vendedor = vendedorRepositorio.findByLegajo(legajoVendedor);
         for(StockYCantidad stockYCantidad : stocksYCantidades){

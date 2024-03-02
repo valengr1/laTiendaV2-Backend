@@ -1,8 +1,4 @@
 package ingSoftware.laTienda.controller;
-
-import ingSoftware.laTienda.DTOs.StockDTO;
-import ingSoftware.laTienda.model.Cliente;
-import ingSoftware.laTienda.model.LineaVenta;
 import ingSoftware.laTienda.model.StockYCantidad;
 import ingSoftware.laTienda.service.VentaServicio;
 import org.springframework.beans.factory.annotation.Autowired;
