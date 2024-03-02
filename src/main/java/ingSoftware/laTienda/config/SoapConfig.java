@@ -1,6 +1,6 @@
 package ingSoftware.laTienda.config;
 
-import ingSoftware.laTienda.client.SoapClient;
+import ingSoftware.laTienda.service.AutorizacionAFIPServicio;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
@@ -14,8 +14,8 @@ public class SoapConfig {
         return marshaller;
     }
     @Bean
-    public SoapClient getSoapClient(Jaxb2Marshaller marshaller){
-        SoapClient client = new SoapClient();
+    public AutorizacionAFIPServicio getSoapClient(Jaxb2Marshaller marshaller){
+        AutorizacionAFIPServicio client = new AutorizacionAFIPServicio();
         client.setDefaultUri("http://istp1service.azurewebsites.net/LoginService.svc");
         client.setMarshaller(marshaller);
         client.setUnmarshaller(marshaller);

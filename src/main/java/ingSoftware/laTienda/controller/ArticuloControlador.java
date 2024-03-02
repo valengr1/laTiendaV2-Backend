@@ -1,6 +1,4 @@
 package ingSoftware.laTienda.controller;
-
-import ingSoftware.laTienda.DTOs.ArticuloDTO;
 import ingSoftware.laTienda.model.Articulo;
 import ingSoftware.laTienda.service.ArticuloServicio;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,11 +13,6 @@ public class ArticuloControlador {
     public ArticuloControlador(ArticuloServicio articuloServicio) {
         this.articuloServicio = articuloServicio;
     }
-    @GetMapping("/api/articulo/buscarByCodigo")
-    public ArticuloDTO getArticulo(@RequestParam Long codigo) {
-        return articuloServicio.findArticuloByCodigo(codigo);
-    }
-
     //busca y obtiene todos los artículos.
     @GetMapping("/api/articulo/listar")
     public List<Articulo> getArticulos() {
@@ -37,6 +30,7 @@ public class ArticuloControlador {
     public Articulo getArticuloByCodigoAndEstado(@RequestParam Long codigo){
         return articuloServicio.getArticuloByCodigoAndEstado(codigo);
     }
+
     @PostMapping("/api/articulo/agregar")
     public String agregarArticulo(@RequestBody Articulo articulo){
         return articuloServicio.agregarArticulo(articulo);

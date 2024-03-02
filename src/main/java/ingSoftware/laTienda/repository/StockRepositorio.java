@@ -14,4 +14,7 @@ public interface StockRepositorio extends JpaRepository<Stock,Long> {
 
     @Query("SELECT s FROM Stock s where s.articulo.codigo = ?1 and s.sucursal.id = ?2")
     List<Stock> findStockByCodigoDelArticuloAndSucursalId(Long codigo, Long sucursalId);
+
+    @Query("select s from Stock s where s.id = ?1")
+    Stock findByIdStock(Long idStock);
 }

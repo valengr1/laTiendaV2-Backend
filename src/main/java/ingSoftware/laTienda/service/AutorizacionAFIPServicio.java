@@ -1,11 +1,11 @@
-package ingSoftware.laTienda.client;
+package ingSoftware.laTienda.service;
 
 import ingSoftware.laTienda.wsdl.*;
 import jakarta.xml.bind.JAXBElement;
 import org.springframework.ws.client.core.support.WebServiceGatewaySupport;
 import org.springframework.ws.soap.client.core.SoapActionCallback;
 
-public class SoapClient extends WebServiceGatewaySupport {
+public class AutorizacionAFIPServicio extends WebServiceGatewaySupport {
     public SolicitarAutorizacionResponse solicitarAutorizacion(String codigo){
         SolicitarAutorizacion autorizacionRequest = new SolicitarAutorizacion();
         ObjectFactory factory = new ObjectFactory();

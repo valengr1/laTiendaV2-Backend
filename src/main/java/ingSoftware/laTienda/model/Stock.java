@@ -3,6 +3,8 @@ package ingSoftware.laTienda.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Setter
 @Getter
 @Entity @NoArgsConstructor @AllArgsConstructor @ToString
@@ -17,9 +19,8 @@ public class Stock {
     private Talle talle;
     @ManyToOne @JoinColumn
     private Sucursal sucursal;
-    @OneToOne(mappedBy = "stock")
-    private LineaVenta lineaVenta;
+    @OneToMany(mappedBy = "stock")
+    private List<LineaVenta> lineaVenta;
     @Column(nullable = false)
     private Integer cantidad;
-
 }

@@ -1,10 +1,8 @@
 package ingSoftware.laTienda.service;
 
-import ingSoftware.laTienda.DTOs.ArticuloDTO;
 import ingSoftware.laTienda.model.Articulo;
 import ingSoftware.laTienda.repository.ArticuloRepositorio;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,25 +14,9 @@ public class ArticuloServicio {
     public ArticuloServicio(ArticuloRepositorio articuloRepositorio) {
         this.articuloRepositorio = articuloRepositorio;
     }
-    public ArticuloDTO findArticuloByCodigo(Long codigo) {
-        ArticuloDTO articuloDTO = new ArticuloDTO();
-        Articulo articuloEncontrado = articuloRepositorio.findArticuloByCodigo(codigo);
-        if(articuloEncontrado == null) {
-            return null;
-        }
-        articuloDTO.setCodigo(articuloEncontrado.getCodigo());
-        articuloDTO.setDescripcion(articuloEncontrado.getDescripcion());
-        articuloDTO.setMarca(articuloEncontrado.getMarca().getDescripcion());
-        articuloDTO.setCategoria(articuloEncontrado.getCategoria().getDescripcion());
-        articuloDTO.setPrecio(articuloEncontrado.getPrecio());
-        articuloDTO.setTipoTalle(articuloEncontrado.getTipoTalle().getDescripcion());
-        return articuloDTO;
-    }
-
     public List<Articulo> findAll() {
         return articuloRepositorio.findAll();
     }
-
     public String agregarArticulo(Articulo articulo) {
         Articulo articuloEnDB = articuloRepositorio.findArticuloByCodigo(articulo.getCodigo());
         if(articuloEnDB != null){
@@ -68,7 +50,6 @@ public class ArticuloServicio {
             return "El margen de ganancia debe tener un valor mayor que 0 y menor o igual a 1";
         }
     }
-
     public String eliminarArticuloByCodigo(Long codigo) {
         Articulo articuloExistente = articuloRepositorio.findArticuloByCodigo(codigo);
         if(articuloExistente == null){
@@ -77,11 +58,9 @@ public class ArticuloServicio {
         articuloRepositorio.deleteById(codigo);
         return "Articulo eliminado correctamente";
     }
-
     public Articulo getArticuloByCodigo(Long codigo) {
         return articuloRepositorio.findArticuloByCodigo(codigo);
     }
-
     public Articulo getArticuloByCodigoAndEstado(Long codigo) {
         return articuloRepositorio.getArticuloByCodigoAndEstado(codigo);
     }

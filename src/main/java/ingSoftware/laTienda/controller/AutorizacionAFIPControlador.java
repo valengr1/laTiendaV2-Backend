@@ -1,47 +1,38 @@
 package ingSoftware.laTienda.controller;
 
-import ingSoftware.laTienda.client.SoapClient;
-import ingSoftware.laTienda.model.Cliente;
+import ingSoftware.laTienda.service.AutorizacionAFIPServicio;
 import ingSoftware.laTienda.service.ClienteServicio;
 import ingSoftware.laTienda.wsdl.*;
 import jakarta.xml.bind.JAXBElement;
-import org.antlr.v4.runtime.Token;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.net.SocketTimeoutException;
-import java.text.DecimalFormat;
-import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
 
 @RestController
-public class SoapControlador {
-    SoapClient soapClient;
+public class AutorizacionAFIPControlador {
+    AutorizacionAFIPServicio autorizacionAFIPServicio;
     ClienteServicio clienteServicio;
 
     @Autowired
-    public SoapControlador(SoapClient soapClient, ClienteServicio clienteServicio){
-        this.soapClient = soapClient;
+    public AutorizacionAFIPControlador(AutorizacionAFIPServicio autorizacionAFIPServicio, ClienteServicio clienteServicio){
+        this.autorizacionAFIPServicio = autorizacionAFIPServicio;
         this.clienteServicio = clienteServicio;
     }
 
-    @GetMapping("/api/solicitarUltimosComprobantes")
+    @GetMapping("/api/autorizacionAFIP/solicitarUltimosComprobantes")
     public SolicitarUltimosComprobantesResponse solicitarUltimosComprobantes(){
-        SolicitarAutorizacionResponse solicitarAutorizacionResponse = soapClient.solicitarAutorizacion(System.getenv("codigoGrupoIS"));
+        SolicitarAutorizacionResponse solicitarAutorizacionResponse = autorizacionAFIPServicio.solicitarAutorizacion(System.getenv("codigoGrupoIS"));
         String token = solicitarAutorizacionResponse.getSolicitarAutorizacionResult().getValue().getToken().getValue();
-        return soapClient.solicitarUltimosComprobantes(token);
+        return autorizacionAFIPServicio.solicitarUltimosComprobantes(token);
     }
 
-    @GetMapping("/api/solicitarCae")
+    @GetMapping("/api/autorizacionAFIP/solicitarCae")
     public SolicitarCaeResponse solicitarCae(@RequestParam String tipoComprobante, @RequestParam String tipoDocumento, @RequestParam Long numeroDocumento, @RequestParam double importeTotal) throws Exception {
-        SolicitarAutorizacionResponse solicitarAutorizacionResponse = soapClient.solicitarAutorizacion(System.getenv("codigoGrupoIS"));
+        SolicitarAutorizacionResponse solicitarAutorizacionResponse = autorizacionAFIPServicio.solicitarAutorizacion(System.getenv("codigoGrupoIS"));
         String token = solicitarAutorizacionResponse.getSolicitarAutorizacionResult().getValue().getToken().getValue();
 
         TipoDocumento tipoDocumentoSolicitud = switch (tipoDocumento) {
@@ -71,10 +62,11 @@ public class SoapControlador {
         JAXBElement<XMLGregorianCalendar> fechaJaxb = factory.createSolicitudAutorizacionFecha(fecha);
 
         SolicitudAutorizacion solicitudAutorizacion = getSolicitudAutorizacion(tipoComprobanteSolicitud, tipoDocumentoSolicitud, numeroDocumentoSolicitud, importeTotalRedondeado, importeNetoRedondeado, importeIvaRedondeado, fechaJaxb);
-        return soapClient.solicitarCae(token, solicitudAutorizacion);
+        return autorizacionAFIPServicio.solicitarCae(token, solicitudAutorizacion);
     }
+
     private static Long getNumeroDocumentoSolicitud(String tipoDocumento, Long numeroDocumento) {
-        Long numeroDocumentoSolicitud = null;
+        Long numeroDocumentoSolicitud;
         boolean numeroDocumentoComprobacion = switch (tipoDocumento){
             case "DNI" -> numeroDocumento.toString().length() == 7 || numeroDocumento.toString().length() == 8;
             case "CUIT", "CUIL" -> numeroDocumento.toString().length() == 11;
@@ -89,7 +81,7 @@ public class SoapControlador {
         return numeroDocumentoSolicitud;
     }
 
-    private static SolicitudAutorizacion getSolicitudAutorizacion(TipoComprobante tipoComprobante, TipoDocumento tipoDocumento,Long numeroDocumento,double importeTotal, double importeNeto, double importeIva, JAXBElement<XMLGregorianCalendar> fechaJaxb) throws Exception {
+    private static SolicitudAutorizacion getSolicitudAutorizacion(TipoComprobante tipoComprobante, TipoDocumento tipoDocumento,Long numeroDocumento,double importeTotal, double importeNeto, double importeIva, JAXBElement<XMLGregorianCalendar> fechaJaxb)  {
         SolicitudAutorizacion solicitudAutorizacion = new SolicitudAutorizacion();
         solicitudAutorizacion.setImporteTotal(importeTotal);
         solicitudAutorizacion.setImporteIva(importeIva);

@@ -24,6 +24,7 @@ public class AdministrativoControlador {
     public String buscarByLegajo(@RequestParam Long legajo){
         return administrativoServicio.buscarPorLegajo(legajo);
     }
+
     @GetMapping("/api/administrativo/buscarByLegajoAndContraseña")
     public String buscarByLegajoAndContraseña(@RequestParam Long legajo, @RequestParam String contraseña){
         return administrativoServicio.buscarPorLegajoYContraseña(legajo,contraseña);
