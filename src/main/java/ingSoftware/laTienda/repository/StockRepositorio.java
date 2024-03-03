@@ -2,6 +2,7 @@ package ingSoftware.laTienda.repository;
 
 import ingSoftware.laTienda.model.Stock;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
@@ -17,4 +18,9 @@ public interface StockRepositorio extends JpaRepository<Stock,Long> {
 
     @Query("select s from Stock s where s.id = ?1")
     Stock findByIdStock(Long idStock);
+
+    //actualizar stock
+    @Modifying
+    @Query("update Stock s set s.cantidad = s.cantidad - ?2 where s.id = ?1")
+    void actualizarStock(Long idStock, Integer cantidad);
 }

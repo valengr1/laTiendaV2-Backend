@@ -41,7 +41,7 @@ public class Venta {
         return pago;
     }
 
-    public void crearTipoComprobante(Cliente cliente) {
+    public void asociarTipoComprobante(Cliente cliente) {
         if(cliente.getCondicionTributaria().getId() >= 1 && cliente.getCondicionTributaria().getId() <= 5){
             if(cliente.getCondicionTributaria().getId() == 1 || cliente.getCondicionTributaria().getId() == 2){
                 tipoComprobante = TipoComprobante.FACTURA_A;
