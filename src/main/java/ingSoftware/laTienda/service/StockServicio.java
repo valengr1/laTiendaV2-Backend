@@ -40,6 +40,9 @@ public class StockServicio {
 
     private List<StockDTO> getStockDTOS(List<StockDTO> stocksDto, List<Stock> stocksEncontrados) {
         for (Stock stock : stocksEncontrados) {
+            if(stock.getCantidad() == 0) {
+                continue;
+            }
             StockDTO stockDto = new StockDTO();
             stockDto.setId(stock.getId());
             stockDto.setTalle(stock.getTalle().getDescripcion());

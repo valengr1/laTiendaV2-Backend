@@ -39,16 +39,16 @@ public class VentaServicio {
         } else {
             //compruebo que haya stock suficiente
             for(StockYCantidad stockYCantidad : stocksYCantidades) {
-                Stock stock = stockRepositorio.findByIdStock(stockYCantidad.getStockid());
+                Stock stock = stockRepositorio.findStockByIdAndSucursalId(stockYCantidad.getStockid(), vendedor.getSucursal().getId());
                 if (stock.getCantidad() - stockYCantidad.getCantidadRequerida() < 0) {
                     return "No hay stock suficiente";
                 }
             }
             //Hay stock suficiente. Agrego las lineas de venta y actualizo el stock.
             for(StockYCantidad stockYCantidad : stocksYCantidades) {
-                Stock stock = stockRepositorio.findByIdStock(stockYCantidad.getStockid());
+                Stock stock = stockRepositorio.findStockByIdAndSucursalId(stockYCantidad.getStockid(), vendedor.getSucursal().getId());
                 v.agregarLineaVenta(stock, stockYCantidad.getCantidadRequerida());
-                stockRepositorio.actualizarStock(stock.getId(), stockYCantidad.getCantidadRequerida());
+                stockRepositorio.actualizarStock(stock.getId(), stockYCantidad.getCantidadRequerida(), vendedor.getSucursal().getId());
             }
             v.setCliente(cliente);
             v.setVendedor(vendedor);

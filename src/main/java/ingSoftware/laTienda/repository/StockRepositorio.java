@@ -16,11 +16,14 @@ public interface StockRepositorio extends JpaRepository<Stock,Long> {
     @Query("SELECT s FROM Stock s where s.articulo.codigo = ?1 and s.sucursal.id = ?2")
     List<Stock> findStockByCodigoDelArticuloAndSucursalId(Long codigo, Long sucursalId);
 
+    @Query("SELECT s FROM Stock s where s.id = ?1 and s.sucursal.id = ?2")
+    Stock findStockByIdAndSucursalId(Long idStock, Long idSucursal);
+
     @Query("select s from Stock s where s.id = ?1")
     Stock findByIdStock(Long idStock);
 
     //actualizar stock
     @Modifying
-    @Query("update Stock s set s.cantidad = s.cantidad - ?2 where s.id = ?1")
-    void actualizarStock(Long idStock, Integer cantidad);
+    @Query("update Stock s set s.cantidad = s.cantidad - ?2 where s.id = ?1 and s.sucursal.id = ?3")
+    void actualizarStock(Long idStock, Integer cantidad, Long idSucursal);
 }
