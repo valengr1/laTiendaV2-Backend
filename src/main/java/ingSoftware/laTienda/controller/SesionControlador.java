@@ -1,6 +1,7 @@
 package ingSoftware.laTienda.controller;
 
 import ingSoftware.laTienda.model.Sesion;
+import ingSoftware.laTienda.model.Vendedor;
 import ingSoftware.laTienda.service.SesionServicio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -25,9 +26,9 @@ public class SesionControlador {
         return sesionServicio.getSesionByLegajo(legajo);
     }
 
-    @PostMapping("/api/sesion/agregar")
-    public String postSesion(@RequestParam Long legajo, @RequestParam String password){
-        return sesionServicio.postSesion(legajo,password);
+    @PostMapping("/api/sesion")
+    public String postSesion(@RequestBody Vendedor vendedor){
+        return sesionServicio.postSesion(vendedor.getLegajo(),vendedor.getContraseña());
     }
 
     @DeleteMapping("/api/sesion/eliminar")

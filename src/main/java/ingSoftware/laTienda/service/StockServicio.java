@@ -33,7 +33,7 @@ public class StockServicio {
     public List<StockDTO> buscarPorCodigoDeArticuloAndSucursal(Long codigo, Long legajoVendedor) {
         List<StockDTO> stocksDto = new ArrayList<>();
         Vendedor v = vendedorRepositorio.findByLegajo(legajoVendedor);
-        Long sucursalId = v.getSucursal().getId();
+        Long sucursalId = v.getPuntoVenta().getSucursal().getId();
         List<Stock> stocksEncontrados = stockRepositorio.findStockByCodigoDelArticuloAndSucursalId(codigo, sucursalId);
         return getStockDTOS(stocksDto, stocksEncontrados);
     }

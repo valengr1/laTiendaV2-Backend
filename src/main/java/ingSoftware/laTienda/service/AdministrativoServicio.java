@@ -3,6 +3,7 @@ package ingSoftware.laTienda.service;
 import ingSoftware.laTienda.model.Administrativo;
 import ingSoftware.laTienda.model.Vendedor;
 import ingSoftware.laTienda.repository.AdministrativoRepositorio;
+import ingSoftware.laTienda.utils.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,23 +21,33 @@ public class AdministrativoServicio {
         return administrativoRepositorio.findAll();
     }
 
-    public String buscarPorLegajoYContraseña(Long legajo, String contraseña) {
-        Administrativo administrativoEncontrado = administrativoRepositorio.findByLegajoAndContraseña(legajo, contraseña);
-        if(administrativoEncontrado == null){
-            return "No autorizado";
+    public Administrativo buscarPorLegajoYContraseña(Long legajo, String contraseña) {
+        Administrativo adminEncontrado = administrativoRepositorio.findByLegajo(legajo);
+        if(adminEncontrado == null){
+            return null;
         }
-        else{
-            return "Bienvenido " + administrativoEncontrado.getNombre();
+        else {
+            Boolean contraseñasCoinciden = BCrypt.checkpw(contraseña, administrativoRepositorio.findByLegajo(legajo).getContraseña());
+            if (contraseñasCoinciden) {
+                Administrativo administrativo = administrativoRepositorio.findByLegajo(legajo);
+                return administrativo;
+            } else {
+                return null;
+            }
         }
     }
 
-    public String buscarPorLegajo(Long legajo) {
-        Administrativo administrativoEncontrado = administrativoRepositorio.findByLegajo(legajo);
-        if(administrativoEncontrado == null){
-            return "No existe el administrativo";
-        }
-        else{
-            return "Existe el administrativo";
+    public Administrativo buscarPorLegajo(Long legajo) {
+        return administrativoRepositorio.findByLegajo(legajo);
+    }
+
+    public Administrativo crearAdministrativo(Administrativo administrativo) {
+        Administrativo adminEncontrado = administrativoRepositorio.findByLegajo(administrativo.getLegajo());
+        if (adminEncontrado != null) {
+            return null;
+        } else {
+            administrativo.setContraseña(BCrypt.hashpw(administrativo.getContraseña(), BCrypt.gensalt()));
+            return administrativoRepositorio.save(administrativo);
         }
     }
 }

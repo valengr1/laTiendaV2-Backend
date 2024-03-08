@@ -32,7 +32,7 @@ public class VentaControlador {
     }
 
     @PostMapping("/api/venta/registrarNuevaVenta")
-    public String registrarNuevaVenta(@RequestBody List<StockYCantidad> stocksYCantidades, @RequestParam long legajoVendedor, @RequestParam long numeroDocumento) throws DatatypeConfigurationException {
+    public String registrarNuevaVenta(@RequestBody List<StockYCantidad> stocksYCantidades, @RequestParam long legajoVendedor, @RequestParam long numeroDocumento) {
         String token = solicitarToken().getSolicitarAutorizacionResult().getValue().getToken().getValue();
         return ventaServicio.registrarNuevaVenta(stocksYCantidades, legajoVendedor,numeroDocumento, token);
     }

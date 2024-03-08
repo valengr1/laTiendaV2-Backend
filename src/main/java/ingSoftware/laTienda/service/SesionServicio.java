@@ -28,7 +28,7 @@ public class SesionServicio {
 
     public String postSesion(Long legajoVendedor, String password) {
         LocalDate fechaActual = LocalDate.now();
-        Vendedor v = vendedorRepositorio.findByLegajoAndContraseña(legajoVendedor,password);
+        Vendedor v = vendedorRepositorio.findByLegajo(legajoVendedor);
         List<Sesion> sesiones = sesionRepositorio.findAll();
         boolean sesionExistente = false;
         for(Sesion s : sesiones){

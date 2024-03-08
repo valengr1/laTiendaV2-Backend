@@ -14,17 +14,26 @@ public class VendedorControlador {
     public VendedorControlador(VendedorServicio vendedorServicio){
         this.vendedorServicio = vendedorServicio;
     }
-    @GetMapping("/api/vendedor/buscarByLegajoAndContraseña")
-    public String getVendedor(@RequestParam Long legajo, @RequestParam String contraseña){
-        return vendedorServicio.buscarPorLegajoYContraseña(legajo, contraseña);
-    }
-    @GetMapping("/api/vendedor/buscarByLegajo")
-    public String buscarByLegajo(@RequestParam Long legajo){
-        return vendedorServicio.buscarPorLegajo(legajo);
-    }
 
-    @GetMapping("/api/vendedor/listar")
+    @GetMapping("/api/vendedor")
     public List<Vendedor> listar(){
         return vendedorServicio.listar();
     }
+
+    @PostMapping("/api/vendedor/crear")
+    public Vendedor crearVendedor(@RequestBody Vendedor vendedor){
+        return vendedorServicio.crearVendedor(vendedor);
+    }
+
+    @PostMapping("/api/vendedor")
+    public Vendedor getVendedor(@RequestBody Vendedor vendedor){
+        return vendedorServicio.buscarPorLegajoYContraseña(vendedor.getLegajo(), vendedor.getContraseña());
+    }
+
+    @PostMapping("/api/vendedor/{legajo}")
+    public Vendedor buscarByLegajo(@PathVariable Long legajo){
+        return vendedorServicio.buscarPorLegajo(legajo);
+    }
+
+
 }

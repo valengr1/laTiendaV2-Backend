@@ -1,12 +1,17 @@
 package ingSoftware.laTienda;
-import ingSoftware.laTienda.wsdl.ObjectFactory;
-import ingSoftware.laTienda.wsdl.TipoComprobante;
-import ingSoftware.laTienda.wsdl.TipoDocumento;
+import ingSoftware.laTienda.wsdl.*;
+import jakarta.xml.bind.JAXBElement;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.util.Assert;
 
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.XMLGregorianCalendar;
+import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.TimeZone;
 
 @SpringBootTest
 class LaTiendaApplicationTests {
@@ -38,5 +43,30 @@ class LaTiendaApplicationTests {
 		resultado=Math.round(resultado);
 		resultado=(resultado/Math.pow(10, 2))+parteEntera;
 		Assertions.assertEquals(120000.00, resultado);
+	}
+
+	@Test
+	public void solicitarAutorizacion() throws DatatypeConfigurationException {
+		GregorianCalendar ahora = new GregorianCalendar(TimeZone.getTimeZone("GMT-3"));
+		XMLGregorianCalendar fechaSolicitud = DatatypeFactory.newInstance().newXMLGregorianCalendar(ahora);
+		ObjectFactory factory = new ObjectFactory();
+		JAXBElement<XMLGregorianCalendar> fechaJaxb = factory.createSolicitudAutorizacionFecha(fechaSolicitud);
+		long numero = 1;
+		SolicitudAutorizacion solicitudAutorizacion = new SolicitudAutorizacion();
+		solicitudAutorizacion.setFecha(fechaJaxb);
+		solicitudAutorizacion.setImporteIva(210.00);
+		solicitudAutorizacion.setImporteNeto(790.00);
+		solicitudAutorizacion.setImporteTotal(1000.00);
+		solicitudAutorizacion.setNumero(numero);
+		solicitudAutorizacion.setNumeroDocumento(43501537L);
+		solicitudAutorizacion.setTipoComprobante(TipoComprobante.FACTURA_B);
+		solicitudAutorizacion.setTipoDocumento(TipoDocumento.DNI);
+		Assertions.assertEquals(43501537L, solicitudAutorizacion.getNumeroDocumento());
+		Assertions.assertEquals(1000.00, solicitudAutorizacion.getImporteTotal());
+		Assertions.assertEquals(210.00, solicitudAutorizacion.getImporteIva());
+		Assertions.assertEquals(790.00, solicitudAutorizacion.getImporteNeto());
+		Assertions.assertEquals(1, solicitudAutorizacion.getNumero());
+		Assertions.assertEquals(TipoComprobante.FACTURA_B, solicitudAutorizacion.getTipoComprobante());
+		Assertions.assertEquals(TipoDocumento.DNI, solicitudAutorizacion.getTipoDocumento());
 	}
 }
