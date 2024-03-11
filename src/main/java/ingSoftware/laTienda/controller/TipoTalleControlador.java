@@ -16,7 +16,7 @@ public class TipoTalleControlador {
     public TipoTalleControlador(TipoTalleServicio tipoTalleServicio){
         this.tipoTalleServicio = tipoTalleServicio;
     }
-    @GetMapping("/api/tiposTalle/listar")
+    @GetMapping("/api/tiposTalle")
     public List<TipoTalle> getTiposTalle(){
         return tipoTalleServicio.getTiposTalle();
     }

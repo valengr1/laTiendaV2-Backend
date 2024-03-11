@@ -15,25 +15,22 @@ public class VendedorControlador {
         this.vendedorServicio = vendedorServicio;
     }
 
-    @GetMapping("/api/vendedor")
+    @GetMapping("/api/vendedores")
     public List<Vendedor> listar(){
         return vendedorServicio.listar();
     }
 
-    @PostMapping("/api/vendedor/crear")
-    public Vendedor crearVendedor(@RequestBody Vendedor vendedor){
-        return vendedorServicio.crearVendedor(vendedor);
+    @GetMapping("/api/vendedores/{legajo}")
+    public Vendedor buscarByLegajo(@PathVariable Long legajo){
+        return vendedorServicio.buscarPorLegajo(legajo);
     }
 
-    @PostMapping("/api/vendedor")
+    @PostMapping("/api/vendedores")
     public Vendedor getVendedor(@RequestBody Vendedor vendedor){
         return vendedorServicio.buscarPorLegajoYContraseña(vendedor.getLegajo(), vendedor.getContraseña());
     }
 
-    @PostMapping("/api/vendedor/{legajo}")
-    public Vendedor buscarByLegajo(@PathVariable Long legajo){
-        return vendedorServicio.buscarPorLegajo(legajo);
-    }
+
 
 
 }

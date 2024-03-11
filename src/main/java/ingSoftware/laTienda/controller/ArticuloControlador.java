@@ -14,35 +14,35 @@ public class ArticuloControlador {
         this.articuloServicio = articuloServicio;
     }
     //busca y obtiene todos los artículos.
-    @GetMapping("/api/articulo/listar")
+    @GetMapping("/api/articulos")
     public List<Articulo> getArticulos() {
         return articuloServicio.findAll();
     }
 
     //busca y obtiene el artículo independientemente de su estado: eliminado lógicamente o no.
-    @GetMapping("/api/articulo/buscarArticuloByCodigo")
+    @GetMapping("/api/articulos/buscarArticuloByCodigo")
     public Articulo getArticuloByCodigo(@RequestParam Long codigo){
         return articuloServicio.getArticuloByCodigo(codigo);
     }
 
     //busca y obtiene el artículo si no está eliminado lógicamente.
-    @GetMapping("/api/articulo/buscarArticuloByCodigoAndEstado")
-    public Articulo getArticuloByCodigoAndEstado(@RequestParam Long codigo){
+    @GetMapping("/api/articulos/{codigo}")
+    public Articulo getArticulo(@PathVariable Long codigo){
         return articuloServicio.getArticuloByCodigoAndEstado(codigo);
     }
 
-    @PostMapping("/api/articulo/agregar")
+    @PostMapping("/api/articulos")
     public String agregarArticulo(@RequestBody Articulo articulo){
         return articuloServicio.agregarArticulo(articulo);
     }
 
-    @PutMapping("/api/articulo/modificar")
+    @PutMapping("/api/articulos")
     public String modificarArticulo(@RequestBody Articulo articulo){
         return articuloServicio.modificarArticulo(articulo);
     }
 
-    @DeleteMapping("/api/articulo/eliminarArticuloByCodigo")
-    public String eliminarArticuloByCodigo(@RequestParam Long codigo){
+    @DeleteMapping("/api/articulos/{codigo}")
+    public String eliminarArticuloByCodigo(@PathVariable Long codigo){
         return articuloServicio.eliminarArticuloByCodigo(codigo);
     }
 }

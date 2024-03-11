@@ -32,22 +32,22 @@ import jakarta.xml.bind.annotation.XmlType;
 public enum TipoComprobante {
 
     @XmlEnumValue("FacturaA")
-    FACTURA_A("FacturaA"),
+    FACTURA_A(1),
     @XmlEnumValue("FacturaB")
-    FACTURA_B("FacturaB");
-    public final String value;
+    FACTURA_B(6);
+    public final int value;
 
-    TipoComprobante(String v) {
+    TipoComprobante(int v) {
         value = v;
     }
 
-    public String value() {
+    public int value() {
         return value;
     }
 
     public static TipoComprobante fromValue(String v) {
         for (TipoComprobante c: TipoComprobante.values()) {
-            if (c.value.equals(v)) {
+            if (c.value == Integer.parseInt(v)) {
                 return c;
             }
         }

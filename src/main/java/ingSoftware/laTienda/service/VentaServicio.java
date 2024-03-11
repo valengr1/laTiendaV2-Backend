@@ -50,17 +50,17 @@ public class VentaServicio {
         } else if (stocksYCantidades.isEmpty()){
             return "No hay productos en la venta";
         } else {
-            for(StockYCantidad stockYCantidad : stocksYCantidades) {
-                Stock stock = stockRepositorio.findStockByIdAndSucursalId(stockYCantidad.getStockid(), vendedor.getPuntoVenta().getSucursal().getId());
-                if (stock.getCantidad() - stockYCantidad.getCantidadRequerida() < 0) {
-                    return "No hay stock suficiente";
-                }
-            }
-            for(StockYCantidad stockYCantidad : stocksYCantidades) {
-                Stock stock = stockRepositorio.findStockByIdAndSucursalId(stockYCantidad.getStockid(), vendedor.getPuntoVenta().getSucursal().getId());
-                v.agregarLineaVenta(stock, stockYCantidad.getCantidadRequerida());
-                //stockRepositorio.actualizarStock(stock.getId(), stockYCantidad.getCantidadRequerida(), vendedor.getSucursal().getId());
-            }
+//            for(StockYCantidad stockYCantidad : stocksYCantidades) {
+//                Stock stock = stockRepositorio.findStockByIdAndSucursalId(stockYCantidad.getStockid(), vendedor.getPuntoVenta().getSucursal().getId());
+//                if (stock.getCantidad() - stockYCantidad.getCantidadRequerida() < 0) {
+//                    return "No hay stock suficiente";
+//                }
+//            }
+//            for(StockYCantidad stockYCantidad : stocksYCantidades) {
+//                Stock stock = stockRepositorio.findStockByIdAndSucursalId(stockYCantidad.getStockid(), vendedor.getPuntoVenta().getSucursal().getId());
+//                v.agregarLineaVenta(stock, stockYCantidad.getCantidadRequerida());
+//                //stockRepositorio.actualizarStock(stock.getId(), stockYCantidad.getCantidadRequerida(), vendedor.getSucursal().getId());
+//            }
 //            double total = v.getTotal();
 //            double importeNeto = total - (total * 0.21);
 //            double importeIva = total * 0.21;

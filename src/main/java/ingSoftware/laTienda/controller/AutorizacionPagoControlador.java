@@ -16,8 +16,8 @@ public class AutorizacionPagoControlador {
         this.autorizacionPagoServicio = autorizacionPagoServicio;
     }
 
-    @PostMapping("/api/autorizacionPago/autorizarPago")
-    public String solicitarToken(@RequestBody Tarjeta tarjeta, @RequestParam Double monto) throws URISyntaxException, IOException, InterruptedException {
+    @PostMapping("/api/autorizacionesPagoTarjeta/{monto}")
+    public String solicitarToken(@RequestBody Tarjeta tarjeta, @PathVariable Double monto) throws URISyntaxException, IOException, InterruptedException {
             return autorizacionPagoServicio.solicitarTokenPago(tarjeta, monto);
     }
 }

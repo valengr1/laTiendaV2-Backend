@@ -3,10 +3,7 @@ package ingSoftware.laTienda.controller;
 import ingSoftware.laTienda.DTOs.StockDTO;
 import ingSoftware.laTienda.model.Stock;
 import ingSoftware.laTienda.service.StockServicio;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -21,11 +18,11 @@ public class StockControlador {
 //        return stockServicio.buscarPorCodigoDeArticulo(codigo);
 //    }
 
-    @GetMapping("/api/stock/buscarBySucursal")
-    public List<StockDTO> buscarPorCodigoDeArticuloAndSucursal(@RequestParam Long codigoArticulo, @RequestParam Long legajoVendedor) {
+    @GetMapping("/api/stocks/{codigoArticulo}/{legajoVendedor}")
+    public List<StockDTO> buscarPorCodigoDeArticuloAndSucursal(@PathVariable Long codigoArticulo, @PathVariable Long legajoVendedor) {
         return stockServicio.buscarPorCodigoDeArticuloAndSucursal(codigoArticulo, legajoVendedor);
     }
-    @GetMapping("/api/stock/listar")
+    @GetMapping("/api/stocks")
     public List<Stock> getAllStock() {
         return stockServicio.getAllStock();
     }

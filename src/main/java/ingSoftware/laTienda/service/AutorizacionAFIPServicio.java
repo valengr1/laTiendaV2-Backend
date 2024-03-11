@@ -47,8 +47,8 @@ public class AutorizacionAFIPServicio extends WebServiceGatewaySupport {
         solicitud.setImporteIva(importeIva);
         solicitud.setImporteNeto(importeNeto);
         solicitud.setNumero(1L);
-        solicitud.setTipoComprobante(TipoComprobante.FACTURA_B); // value = "FacturaB", ordinal = 1
-        solicitud.setTipoDocumento(TipoDocumento.DNI); // value = "Dni" , ordinal = 2
+        solicitud.setTipoComprobante(TipoComprobante.FACTURA_B); // value = 6, ordinal = 1
+        solicitud.setTipoDocumento(TipoDocumento.DNI); // value = 96 , ordinal = 2
         solicitud.setNumeroDocumento(43501537L);
         solicitud.setFecha(fechaJaxb);
 

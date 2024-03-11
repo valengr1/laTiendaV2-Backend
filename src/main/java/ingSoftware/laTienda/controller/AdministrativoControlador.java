@@ -15,25 +15,22 @@ public class AdministrativoControlador {
         this.administrativoServicio = administrativoServicio;
     }
 
-    @GetMapping("/api/administrativo")
+    @GetMapping("/api/administrativos")
     public List<Administrativo> listarAdministrativos(){
         return administrativoServicio.listarAdministrativos();
     }
 
-    @PostMapping("/api/administrativo/crear")
-    public Administrativo crearAdministrativo(@RequestBody Administrativo administrativo){
-        return administrativoServicio.crearAdministrativo(administrativo);
+    @GetMapping("/api/administrativos/{legajo}")
+    public Administrativo buscarByLegajo(@PathVariable Long legajo){
+        return administrativoServicio.buscarPorLegajo(legajo);
     }
 
-    @PostMapping("/api/administrativo")
+    @PostMapping("/api/administrativos")
     public Administrativo buscarByLegajoAndContraseña(@RequestBody Administrativo administrativo){
         return administrativoServicio.buscarPorLegajoYContraseña(administrativo.getLegajo(),administrativo.getContraseña());
     }
 
-    @PostMapping("/api/administrativo/{legajo}")
-    public Administrativo buscarByLegajo(@PathVariable Long legajo){
-        return administrativoServicio.buscarPorLegajo(legajo);
-    }
+
 
 
 

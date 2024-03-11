@@ -16,23 +16,23 @@ public class SesionControlador {
         this.sesionServicio = sesionServicio;
     }
 
-    @GetMapping("/api/sesion/listar")
+    @GetMapping("/api/sesiones")
     public List<Sesion> getSesiones(){
         return sesionServicio.getSesiones();
     }
 
-    @GetMapping("/api/sesion/buscarSesionByLegajoEmpleado")
+    @GetMapping("/api/sesiones/buscarSesionByLegajoEmpleado")
     public String getSesionByLegajo(@RequestParam Long legajo){
         return sesionServicio.getSesionByLegajo(legajo);
     }
 
-    @PostMapping("/api/sesion")
+    @PostMapping("/api/sesiones")
     public String postSesion(@RequestBody Vendedor vendedor){
         return sesionServicio.postSesion(vendedor.getLegajo(),vendedor.getContraseña());
     }
 
-    @DeleteMapping("/api/sesion/eliminar")
-    public String deleteSesion(@RequestParam Long legajo){
+    @DeleteMapping("/api/sesiones/{legajo}")
+    public String deleteSesion(@PathVariable Long legajo){
         return sesionServicio.deleteSesion(legajo);
     }
 }
