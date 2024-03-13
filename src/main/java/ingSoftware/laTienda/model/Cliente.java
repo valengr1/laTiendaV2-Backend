@@ -8,7 +8,7 @@ import lombok.*;
 @Entity @ToString @AllArgsConstructor @NoArgsConstructor
 public class Cliente {
     @Id
-    private Long DNI;
+    private Long numeroDocumento;
     @Column
     private String nombre;
     @Column
@@ -19,4 +19,6 @@ public class Cliente {
     private String telefono;
     @ManyToOne @JoinColumn(nullable = false)
     private CondicionTributaria condicionTributaria;
+    @Enumerated(EnumType.STRING)
+    private TipoDocumento tipoDocumento;
 }

@@ -22,4 +22,9 @@ public class ComprobanteControlador {
     public String determinarTipoComprobanteAEmitir(@PathVariable Long idCondicionTributariaCliente){
         return comprobanteServicio.determinarTipoComprobanteAEmitir(idCondicionTributariaCliente);
     }
+
+    @GetMapping("/api/comprobantes/ultimo")
+    public Integer obtenerUltimoNumeroComprobante(){
+        return comprobanteServicio.obtenerUltimoNumeroComprobante();
+    }
 }

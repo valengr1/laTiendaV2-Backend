@@ -1,4 +1,4 @@
-package ingSoftware.laTienda.model;
+package ingSoftware.laTienda.DTOs;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -6,7 +6,8 @@ import lombok.Setter;
 import java.util.List;
 import java.util.Objects;
 
-@Getter @Setter
+@Getter
+@Setter
 public class ConfirmarPagoResponse {
     private String card_brand;
     private Double amount;

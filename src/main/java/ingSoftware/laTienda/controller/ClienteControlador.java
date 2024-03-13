@@ -20,13 +20,13 @@ public class ClienteControlador {
         return clienteServicio.obtenerClientes();
     }
 
-    @GetMapping("/api/clientes/{dni}")
-    public Cliente buscarClientePorDni(@PathVariable String dni) {
-        return clienteServicio.obtenerClienteByDNI(Long.parseLong(dni));
+    @GetMapping("/api/clientes/{numeroDocumento}")
+    public Cliente buscarClientePorDni(@PathVariable String numeroDocumento) {
+        return clienteServicio.obtenerCliente(Long.parseLong(numeroDocumento));
     }
 
     @PostMapping("/api/clientes")
-    public String registrarCliente(@RequestBody Cliente cliente) {
-        return clienteServicio.registrarCliente(cliente);
+    public String registrar(@RequestBody Cliente cliente) {
+        return clienteServicio.registrar(cliente);
     }
 }

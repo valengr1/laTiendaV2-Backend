@@ -1,10 +1,12 @@
-package ingSoftware.laTienda.model;
+package ingSoftware.laTienda.DTOs;
 
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.List;
-@Getter @Setter
+
+@Getter
+@Setter
 public class ConfirmarPagoRequest {
     private String site_transaction_id;
     private int payment_method_id;

@@ -1,9 +1,10 @@
-package ingSoftware.laTienda.model;
+package ingSoftware.laTienda.DTOs;
 
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter @Setter
+@Getter
+@Setter
 public class SolicitudPagoTarjetaResponse {
     private String id;
     private String status;

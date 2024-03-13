@@ -1,8 +1,10 @@
 package ingSoftware.laTienda.service;
 
 import com.google.gson.Gson;
+import ingSoftware.laTienda.DTOs.*;
 import ingSoftware.laTienda.model.*;
 import org.springframework.stereotype.Service;
+
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -17,7 +19,7 @@ public class AutorizacionPagoServicio {
 
     public String solicitarTokenPago(Tarjeta tarjeta, Double monto) throws URISyntaxException, IOException, InterruptedException {
         String idTransaccion = UUID.randomUUID().toString();
-        System.out.println(idTransaccion);
+//        System.out.println(idTransaccion);
         SolicitudPagoTarjeta solicitud = new SolicitudPagoTarjeta();
         solicitud.setCard_number(tarjeta.getNumeroTarjeta());
         solicitud.setCard_expiration_month(tarjeta.getMesVencimiento());
@@ -29,11 +31,11 @@ public class AutorizacionPagoServicio {
         cardHolderIdentification.setNumber(tarjeta.getDniTitular());
         solicitud.setCard_holder_identification(cardHolderIdentification);
         Gson gson = new Gson();
-        String jsonRequest =  gson.toJson(solicitud);
+        String jsonRequest = gson.toJson(solicitud);
         //System.out.println(jsonRequest);
         HttpRequest postRequest = HttpRequest.newBuilder()
                 .uri(new URI("https://developers.decidir.com/api/v2/tokens"))
-                .header("apikey","b192e4cb99564b84bf5db5550112adea")
+                .header("apikey", "b192e4cb99564b84bf5db5550112adea")
                 .header("Cache-Control", "no-cache")
                 .header("Content-Type", "application/json")
                 .POST(HttpRequest.BodyPublishers.ofString(jsonRequest))
@@ -61,11 +63,11 @@ public class AutorizacionPagoServicio {
         subPayments.setInstallments(1);
         confirmarPagoRequest.setSub_payments(List.of(subPayments));
 
-        String jsonRequest2 =  gson.toJson(confirmarPagoRequest);
-        System.out.println(jsonRequest2);
+        String jsonRequest2 = gson.toJson(confirmarPagoRequest);
+//        System.out.println(jsonRequest2);
         HttpRequest postRequest2 = HttpRequest.newBuilder()
                 .uri(new URI("https://developers.decidir.com/api/v2/payments"))
-                .header("apikey","566f2c897b5e4bfaa0ec2452f5d67f13")
+                .header("apikey", "566f2c897b5e4bfaa0ec2452f5d67f13")
                 .header("Cache-Control", "no-cache")
                 .header("Content-Type", "application/json")
                 .POST(HttpRequest.BodyPublishers.ofString(jsonRequest2))
@@ -74,9 +76,9 @@ public class AutorizacionPagoServicio {
         HttpResponse<String> postResponse2 = httpClient.send(postRequest2, HttpResponse.BodyHandlers.ofString());
         ConfirmarPagoResponse confirmarPagoResponse = gson.fromJson(postResponse2.body(), ConfirmarPagoResponse.class);
 
-        if(confirmarPagoResponse.getError_type() == null && confirmarPagoResponse.getStatus().equals("approved")){
+        if (confirmarPagoResponse.getError_type() == null && confirmarPagoResponse.getStatus().equals("approved")) {
             return "Pago aprobado";
-        } else{
+        } else {
             return confirmarPagoResponse.getError_type();
         }
 

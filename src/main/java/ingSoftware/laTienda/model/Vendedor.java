@@ -16,5 +16,5 @@ public class Vendedor {
     @Column(nullable = false)
     private String apellido;
     @ManyToOne @JoinColumn
-    private PuntoVenta puntoVenta; //punto de venta
+    private PuntoVenta puntoVenta;
 }

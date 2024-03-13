@@ -20,11 +20,6 @@ public class StockServicio {
         this.stockRepositorio = stockRepositorio;
         this.vendedorRepositorio = vendedorRepositorio;
     }
-//    public List<StockDTO> buscarPorCodigoDeArticulo(Long codigo) {
-//        List<StockDTO> stocksDto = new ArrayList<>();
-//        List<Stock> stocksEncontrados = stockRepositorio.findByCodigoDelArticulo(codigo);
-//        return getStockDTOS(stocksDto, stocksEncontrados);
-//    }
 
     public List<Stock> getAllStock() {
         return stockRepositorio.findAll();

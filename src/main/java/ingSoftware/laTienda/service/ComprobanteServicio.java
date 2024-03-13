@@ -20,7 +20,9 @@ public class ComprobanteServicio {
     public List<Comprobante> listarComprobantes(){
         return comprobanteRepositorio.findAll();
     }
-
+    public Integer obtenerUltimoNumeroComprobante(){
+        return comprobanteRepositorio.obtenerUltimoNumeroComprobante();
+    }
     public String determinarTipoComprobanteAEmitir(Long idCondicionTributariaCliente) {
         if(idCondicionTributariaCliente >= 1 && idCondicionTributariaCliente <= 5){
             if(idCondicionTributariaCliente == 1 || idCondicionTributariaCliente == 2){

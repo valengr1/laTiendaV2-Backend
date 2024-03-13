@@ -34,26 +34,26 @@ import jakarta.xml.bind.annotation.XmlType;
 public enum TipoDocumento {
 
     @XmlEnumValue("Cuit")
-    CUIT(80),
+    Cuit("Cuit"),
     @XmlEnumValue("Cuil")
-    CUIL(86),
+    Cuil("Cuil"),
     @XmlEnumValue("Dni")
-    DNI(96),
+    Dni("Dni"),
     @XmlEnumValue("ConsumidorFinal")
-    CONSUMIDOR_FINAL(99);
-    private final int value;
+    ConsumidorFinal("ConsumidorFinal");
+    private final String value;
 
-    TipoDocumento(int v) {
+    TipoDocumento(String v) {
         value = v;
     }
 
-    public int value() {
+    public String value() {
         return value;
     }
 
     public static TipoDocumento fromValue(String v) {
         for (TipoDocumento c: TipoDocumento.values()) {
-            if (c.value == Integer.parseInt(v)) {
+            if (c.value.equals(v)){
                 return c;
             }
         }

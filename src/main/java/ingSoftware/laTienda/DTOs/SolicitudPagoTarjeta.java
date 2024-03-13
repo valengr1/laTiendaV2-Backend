@@ -1,9 +1,10 @@
-package ingSoftware.laTienda.model;
+package ingSoftware.laTienda.DTOs;
 
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter @Setter
+@Getter
+@Setter
 public class SolicitudPagoTarjeta {
     private String card_number;
     private String card_expiration_month;

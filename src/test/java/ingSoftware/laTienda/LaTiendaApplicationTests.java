@@ -29,7 +29,7 @@ class LaTiendaApplicationTests {
 
 	@Test
 	public void facturaAShouldBe1(){
-		String comprobante = TipoComprobante.FACTURA_A.value();
+		String comprobante = TipoComprobante.FacturaA.value();
 		ObjectFactory factory = new ObjectFactory();
 		Assertions.assertEquals("FacturaA", comprobante);
 	}
@@ -59,14 +59,14 @@ class LaTiendaApplicationTests {
 		solicitudAutorizacion.setImporteTotal(1000.00);
 		solicitudAutorizacion.setNumero(numero);
 		solicitudAutorizacion.setNumeroDocumento(43501537L);
-		solicitudAutorizacion.setTipoComprobante(TipoComprobante.FACTURA_B);
-		solicitudAutorizacion.setTipoDocumento(TipoDocumento.DNI);
+		solicitudAutorizacion.setTipoComprobante(TipoComprobante.FacturaB);
+		solicitudAutorizacion.setTipoDocumento(TipoDocumento.Dni);
 		Assertions.assertEquals(43501537L, solicitudAutorizacion.getNumeroDocumento());
 		Assertions.assertEquals(1000.00, solicitudAutorizacion.getImporteTotal());
 		Assertions.assertEquals(210.00, solicitudAutorizacion.getImporteIva());
 		Assertions.assertEquals(790.00, solicitudAutorizacion.getImporteNeto());
 		Assertions.assertEquals(1, solicitudAutorizacion.getNumero());
-		Assertions.assertEquals(TipoComprobante.FACTURA_B, solicitudAutorizacion.getTipoComprobante());
-		Assertions.assertEquals(TipoDocumento.DNI, solicitudAutorizacion.getTipoDocumento());
+		Assertions.assertEquals(TipoComprobante.FacturaB, solicitudAutorizacion.getTipoComprobante());
+		Assertions.assertEquals(TipoDocumento.Dni, solicitudAutorizacion.getTipoDocumento());
 	}
 }
