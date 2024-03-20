@@ -40,6 +40,9 @@ public class VentaServicio {
         this.comprobanteRepositorio = comprobanteRepositorio;
     }
 
+    public VentaServicio(ClienteRepositorio clienteRepositorio, VendedorRepositorio vendedorRepositorio, StockRepositorio stockRepositorio, ComprobanteRepositorio comprobanteRepositorio, VentaRepositorio ventaRepositorio) {
+    }
+
     public String registrar(List<StockYCantidad> stocksYCantidades, Long legajoVendedor, long numeroDocumento, String token) {
         Venta v = new Venta();
         Cliente cliente = clienteRepositorio.findCliente(numeroDocumento);
@@ -85,9 +88,8 @@ public class VentaServicio {
                 return "Venta registrada con éxito";
             }
         } catch (Exception e) {
-            e.getMessage();
+            return e.getMessage();
         }
-        return "Error al registrar la venta";
     }
 
     public SolicitarCaeResponse solicitarAutorizacion(long numeroDocumento, double importeTotal, double importeNeto, double importeIva, String token) throws DatatypeConfigurationException {
