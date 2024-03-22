@@ -1,5 +1,4 @@
 package ingSoftware.laTienda.service;
-
 import ingSoftware.laTienda.DTOs.StockYCantidad;
 import ingSoftware.laTienda.model.*;
 import ingSoftware.laTienda.model.Comprobante;
@@ -7,29 +6,25 @@ import ingSoftware.laTienda.model.TipoDocumento;
 import ingSoftware.laTienda.repository.*;
 import ingSoftware.laTienda.wsdl.*;
 import ingSoftware.laTienda.wsdl.TipoComprobante;
-import org.hibernate.sql.ast.tree.expression.CaseSimpleExpression;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.engine.support.hierarchical.ThrowableCollector;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.mockito.internal.matchers.Any;
-
+import org.springframework.boot.test.context.SpringBootTest;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
-import javax.xml.transform.Result;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.TimeZone;
-
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
+@SpringBootTest
 class VentaServicioTest {
     @Mock
     VentaRepositorio ventaRepositorio;
@@ -59,10 +54,11 @@ class VentaServicioTest {
     String token;
     SolicitarCaeResponse solicitarCaeResponse;
     ResultadoSolicitudAutorizacion resultadoSolicitudAutorizacion;
+
     @BeforeEach
     void setUp() throws DatatypeConfigurationException {
-
         MockitoAnnotations.openMocks(this);
+
         CondicionTributaria condicionTributaria = new CondicionTributaria();
         condicionTributaria.setId(5L);
         condicionTributaria.setDescripcion("Consumidor Final");
@@ -147,20 +143,18 @@ class VentaServicioTest {
         GregorianCalendar ahora = new GregorianCalendar(TimeZone.getTimeZone("GMT-3"));
         XMLGregorianCalendar fechaSolicitud = DatatypeFactory.newInstance().newXMLGregorianCalendar(ahora);
         resultadoSolicitudAutorizacion.setFechaDeVencimiento(factory.createResultadoSolicitudAutorizacionFechaDeVencimiento(fechaSolicitud.toString()));
-        solicitarCaeResponse.setSolicitarCaeResult( factory.createSolicitarCaeResponseSolicitarCaeResult(resultadoSolicitudAutorizacion));
+        solicitarCaeResponse.setSolicitarCaeResult(factory.createSolicitarCaeResponseSolicitarCaeResult(resultadoSolicitudAutorizacion));
     }
 
     @Test
-        public void testRegistrarVenta() throws DatatypeConfigurationException {
-            // Configuración de los mocks
-            VentaServicio ventaService = new VentaServicio(clienteRepositorio, vendedorRepositorio, stockRepositorio, comprobanteRepositorio, ventaRepositorio);
-            when(clienteRepositorio.findCliente(anyLong())).thenReturn(cliente); // Simulamos un cliente existente
-            when(vendedorRepositorio.findByLegajo(anyLong())).thenReturn(vendedor); // Simulamos un vendedor existente
-            when(stockRepositorio.findStockByIdAndSucursalId(anyLong(), anyLong())).thenReturn(stock); // Simulamos un stock existente
-            when(comprobanteRepositorio.obtenerUltimoNumeroComprobante()).thenReturn(100); // Simulamos un número de comprobante
-            when(ventaRepositorio.save(any(Venta.class))).thenReturn(venta); // Simulamos que la venta se guardó correctamente
-            when(autorizacionAfipServicio.solicitarCae(anyString(), any(SolicitudAutorizacion.class))).thenReturn(solicitarCaeResponse); // Simulamos que la solicitud de CAE fue exitosa
-            String resultado = ventaServicio.registrar(stocksYCantidades, 50545L, 43501537, token);
-            assertEquals("Venta registrada con éxito", resultado);
-        }
+    public void testRegistroVentaExitoso() throws DatatypeConfigurationException {
+        when(clienteRepositorio.findCliente(anyLong())).thenReturn(cliente); // Simulamos un cliente existente
+        when(vendedorRepositorio.findByLegajo(anyLong())).thenReturn(vendedor); // Simulamos un vendedor existente
+        when(stockRepositorio.findStockByIdAndSucursalId(anyLong(), anyLong())).thenReturn(stock); // Simulamos un stock existente
+        when(comprobanteRepositorio.obtenerUltimoNumeroComprobante()).thenReturn(100); // Simulamos un número de comprobante
+        when(ventaRepositorio.save(any(Venta.class))).thenReturn(venta); // Simulamos que la venta se guardó correctamente
+        when(autorizacionAfipServicio.solicitarCae(anyString(), any(SolicitudAutorizacion.class))).thenReturn(solicitarCaeResponse); // Simulamos que la solicitud de CAE fue exitosa
+        String resultado = ventaServicio.registrar(stocksYCantidades, 50545L, 43501537, token);
+        assertEquals("Venta registrada con éxito", resultado);
+    }
 }

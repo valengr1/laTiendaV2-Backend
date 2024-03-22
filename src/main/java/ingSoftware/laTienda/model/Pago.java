@@ -11,8 +11,6 @@ public class Pago {
     private Long id;
     @Column(nullable = false) @Getter @Setter
     private Double monto;
-    @Column @Setter
-    private LocalDateTime fecha;
     @OneToOne
     @JoinColumn(name = "venta_id" ,updatable = false, nullable = false) @Setter
     private Venta venta;

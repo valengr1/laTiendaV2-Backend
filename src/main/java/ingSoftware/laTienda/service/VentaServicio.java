@@ -3,19 +3,22 @@ package ingSoftware.laTienda.service;
 import ingSoftware.laTienda.DTOs.StockYCantidad;
 import ingSoftware.laTienda.model.*;
 import ingSoftware.laTienda.model.Comprobante;
+import ingSoftware.laTienda.model.TipoComprobante;
 import ingSoftware.laTienda.repository.*;
 import ingSoftware.laTienda.wsdl.*;
-import ingSoftware.laTienda.wsdl.TipoComprobante;
 import ingSoftware.laTienda.wsdl.TipoDocumento;
 import jakarta.transaction.Transactional;
 import jakarta.xml.bind.JAXBElement;
+import org.apache.tomcat.util.bcel.Const;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.TimeZone;
@@ -40,55 +43,106 @@ public class VentaServicio {
         this.comprobanteRepositorio = comprobanteRepositorio;
     }
 
-    public VentaServicio(ClienteRepositorio clienteRepositorio, VendedorRepositorio vendedorRepositorio, StockRepositorio stockRepositorio, ComprobanteRepositorio comprobanteRepositorio, VentaRepositorio ventaRepositorio) {
-    }
-
-    public String registrar(List<StockYCantidad> stocksYCantidades, Long legajoVendedor, long numeroDocumento, String token) {
+    public ResponseEntity<Venta> registrar(List<StockYCantidad> stocksYCantidades, Long legajoVendedor, long numeroDocumento, String token) {
+        //creo una venta
         Venta v = new Venta();
-        Cliente cliente = clienteRepositorio.findCliente(numeroDocumento);
-        String condicionTributariaCliente = cliente.getCondicionTributaria().getDescripcion();
-        Vendedor vendedor = vendedorRepositorio.findByLegajo(legajoVendedor);
-        for (StockYCantidad stockYCantidad : stocksYCantidades) {
-            Stock stock = stockRepositorio.findStockByIdAndSucursalId(stockYCantidad.getStockid(), vendedor.getPuntoVenta().getSucursal().getId());
-            v.agregarLineaVenta(stock, stockYCantidad.getCantidadRequerida());
-        }
+        //busco el cliente
+        Cliente cliente = buscarCliente(numeroDocumento);
+        //busco el vendedor
+        Vendedor vendedor = buscarVendedor(legajoVendedor);
+        //obtengo las condiciones tributarias
+        CondicionTributaria condicionTributariaTienda = vendedor.getPuntoVenta().getSucursal().getTienda().getCondicionTributaria();
+        CondicionTributaria condicionTributariaCliente = cliente.getCondicionTributaria();
+        //obtengo el numero de documento del cliente
+        Long numeroDocumentoCliente = cliente.getNumeroDocumento();
+        //obtengo el id de la sucursal
+        Long idSucursal = vendedor.getPuntoVenta().getSucursal().getId();
+        //verifico que haya stock suficiente
+        verificarStockSuficiente(stocksYCantidades, idSucursal);
+        //Agrego las lineas de venta a la venta
+        agregarLineasVenta(stocksYCantidades, idSucursal, v);
+        //obtengo los importes: total, neto e iva
         double total = v.getTotal();
-        double importeNeto = total - (total * 0.21);
-        double importeIva = total * 0.21;
-        double totalRedondeado = redondearDecimales(total, 2);
-        double importeNetoRedondeado = redondearDecimales(importeNeto, 2);
-        double importeIvaRedondeado = redondearDecimales(importeIva, 2);
+        double importeNeto = v.getImporteNeto(total);
+        double importeIva = v.getImporteIva(total);
         try {
-            SolicitarCaeResponse respuesta = solicitarAutorizacion(numeroDocumento, totalRedondeado, importeNetoRedondeado, importeIvaRedondeado, token);
+            SolicitarCaeResponse respuesta = solicitarAutorizacion(numeroDocumentoCliente, total, importeNeto, importeIva, token);
             if (respuesta.getSolicitarCaeResult().getValue().getError().getValue() != null) {
-                return respuesta.getSolicitarCaeResult().getValue().getError().getValue();
+                throw new IllegalArgumentException(respuesta.getSolicitarCaeResult().getValue().getError().getValue());
             } else {
-                for (StockYCantidad stockYCantidad : stocksYCantidades) {
-                    Stock stock = stockRepositorio.findStockByIdAndSucursalId(stockYCantidad.getStockid(), vendedor.getPuntoVenta().getSucursal().getId());
-                    if (stock != null) {
-                        if (stock.getCantidad() < stockYCantidad.getCantidadRequerida()) {
-                            return "No hay stock suficiente";
-                        } else {
-                            stockRepositorio.actualizarStock(stock.getId(), stockYCantidad.getCantidadRequerida(), vendedor.getPuntoVenta().getSucursal().getId());
-                        }
-                    } else{
-                        return "No se encontró el stock";
-                    }
-                }
-                v.setCliente(cliente);
-                v.setVendedor(vendedor);
-                Pago p = v.crearPago(total);
-                v.setPago(p);
-                LocalDateTime fecha = LocalDateTime.now();
-                v.setFecha(fecha);
-                int ultimoNumeroComprobante = comprobanteRepositorio.obtenerUltimoNumeroComprobante();
-                Comprobante comprobante = v.crearComprobante(condicionTributariaCliente, ultimoNumeroComprobante + 1);
-                v.setComprobante(comprobante);
+                //se actualiza el stock
+                actualizarStock(stocksYCantidades, idSucursal);
+                //se termina de formar la venta
+                formarVenta(cliente,vendedor,total,condicionTributariaCliente,condicionTributariaTienda,v);
+                //se guarda la venta
                 ventaRepositorio.save(v);
-                return "Venta registrada con éxito";
+                return ResponseEntity.ok(v);
             }
         } catch (Exception e) {
-            return e.getMessage();
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    private void formarVenta(Cliente cliente, Vendedor vendedor, double total, CondicionTributaria condicionTributariaCliente, CondicionTributaria condicionTributariaTienda, Venta v) {
+        v.setCliente(cliente);
+        v.setVendedor(vendedor);
+        v.asignarPago(total);
+        int ultimoNumeroComprobante = comprobanteRepositorio.obtenerUltimoNumeroComprobante();
+        Comprobante comprobante = v.crearComprobante(ultimoNumeroComprobante + 1);
+        comprobante.asignarTipoComprobante(condicionTributariaCliente, condicionTributariaTienda);
+        v.setComprobante(comprobante);
+    }
+
+    private void agregarLineasVenta(List<StockYCantidad> stocksYCantidades, Long idSucursal, Venta v) {
+        for (StockYCantidad stockYCantidad : stocksYCantidades) {
+            Long idStock = stockYCantidad.getStockid();
+            Stock stock = stockRepositorio.findStockByIdAndSucursalId(idStock, idSucursal);
+            if(stock == null){
+                throw new IllegalArgumentException("No se encontró el stock con id: " + idStock + " en la sucursal con id: " + idSucursal);
+            }
+            v.agregarLineaVenta(stock, stockYCantidad.getCantidadRequerida());
+        }
+    }
+
+    public Cliente buscarCliente(Long numeroDocumento){
+        Cliente cliente = clienteRepositorio.findCliente(numeroDocumento);
+        if(cliente == null){
+            throw new IllegalArgumentException("No se encontró el cliente con el número de documento: " + numeroDocumento);
+        }
+        return cliente;
+    }
+
+    public Vendedor buscarVendedor(Long legajoVendedor){
+        Vendedor vendedor = vendedorRepositorio.findByLegajo(legajoVendedor);
+        if(vendedor == null){
+            throw new IllegalArgumentException("No se encontró el vendedor con el legajo: " + legajoVendedor);
+        }
+        return vendedor;
+    }
+
+    public void verificarStockSuficiente(List<StockYCantidad> stocksYCantidades, Long idSucursal){
+        for (StockYCantidad stockYCantidad : stocksYCantidades) {
+            Long idStock = stockYCantidad.getStockid();
+            Stock stock = stockRepositorio.findStockByIdAndSucursalId(idStock, idSucursal);
+            if (stock != null) {
+                if (stock.getCantidad() < stockYCantidad.getCantidadRequerida()) {
+                    throw new IllegalArgumentException("No hay stock suficiente para el artículo con id: " + idStock);
+                }
+            } else{
+                throw new IllegalArgumentException("No se encontró el stock con id: " + idStock + " en la sucursal con id: " + idSucursal);
+            }
+        }
+    }
+
+    public void actualizarStock(List<StockYCantidad> stocksYCantidades, Long idSucursal){
+        for (StockYCantidad stockYCantidad : stocksYCantidades) {
+            Long idStock = stockYCantidad.getStockid();
+            int cantidadRequerida = stockYCantidad.getCantidadRequerida();
+            Stock stock = stockRepositorio.findStockByIdAndSucursalId(idStock, idSucursal);
+            if(stock == null){
+                throw new IllegalArgumentException("No se encontró el stock con id: " + idStock + " en la sucursal con id: " + idSucursal);
+            }
+            stockRepositorio.actualizarStock(idStock, cantidadRequerida, idSucursal);
         }
     }
 
@@ -105,19 +159,11 @@ public class VentaServicio {
         solicitudAutorizacion.setImporteTotal(importeTotal);
         solicitudAutorizacion.setNumero(numero);
         solicitudAutorizacion.setNumeroDocumento(numeroDocumento);
-        solicitudAutorizacion.setTipoComprobante(TipoComprobante.FacturaB);
+        solicitudAutorizacion.setTipoComprobante(ingSoftware.laTienda.wsdl.TipoComprobante.FacturaB);
         solicitudAutorizacion.setTipoDocumento(TipoDocumento.Dni);
         SolicitarCaeResponse solicitarCaeResponse = autorizacionAFIPServicio.solicitarCae(token, solicitudAutorizacion);
         return solicitarCaeResponse;
     }
 
-    public double redondearDecimales(double valorInicial, int numeroDecimales) {
-        double parteEntera, resultado;
-        resultado = valorInicial;
-        parteEntera = Math.floor(resultado);
-        resultado = (resultado - parteEntera) * Math.pow(10, numeroDecimales);
-        resultado = Math.round(resultado);
-        resultado = (resultado / Math.pow(10, numeroDecimales)) + parteEntera;
-        return resultado;
-    }
+
 }

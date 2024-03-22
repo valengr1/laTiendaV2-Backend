@@ -2,6 +2,7 @@ package ingSoftware.laTienda.controller;
 import ingSoftware.laTienda.model.Articulo;
 import ingSoftware.laTienda.service.ArticuloServicio;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,8 +27,8 @@ public class ArticuloControlador {
     }
 
     //busca y obtiene el artículo si no está eliminado lógicamente.
-    @GetMapping("/api/articulos/{codigo}")
-    public Articulo getArticulo(@PathVariable Long codigo){
+    @GetMapping("/api/articulos/{codigo}") @ResponseBody
+    public ResponseEntity<Articulo> getArticulo(@PathVariable Long codigo){
         return articuloServicio.getArticuloByCodigoAndEstado(codigo);
     }
 

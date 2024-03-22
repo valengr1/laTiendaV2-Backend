@@ -11,5 +11,6 @@ public class CondicionTributaria {
     private Long id;
     @Column
     private String descripcion;
-
+//    @ManyToOne @JoinColumn(nullable = false)
+//    private Comprobante comprobante;
 }
