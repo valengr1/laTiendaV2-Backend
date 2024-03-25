@@ -3,6 +3,7 @@ package ingSoftware.laTienda.controller;
 import ingSoftware.laTienda.model.Tarjeta;
 import ingSoftware.laTienda.service.AutorizacionPagoServicio;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -17,7 +18,7 @@ public class AutorizacionPagoControlador {
     }
 
     @PostMapping("/api/autorizacionesPagoTarjeta/{monto}")
-    public String solicitarToken(@RequestBody Tarjeta tarjeta, @PathVariable Double monto) throws URISyntaxException, IOException, InterruptedException {
-            return autorizacionPagoServicio.solicitarTokenPago(tarjeta, monto);
+    public ResponseEntity<?> solicitarToken(@RequestBody Tarjeta tarjeta, @PathVariable Double monto) throws URISyntaxException, IOException, InterruptedException {
+            return autorizacionPagoServicio.autorizarPago(tarjeta, monto);
     }
 }

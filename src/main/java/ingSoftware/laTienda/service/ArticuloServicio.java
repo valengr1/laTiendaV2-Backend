@@ -3,10 +3,12 @@ package ingSoftware.laTienda.service;
 import ingSoftware.laTienda.model.Articulo;
 import ingSoftware.laTienda.repository.ArticuloRepositorio;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ArticuloServicio {
@@ -42,38 +44,38 @@ public class ArticuloServicio {
         //return "No se pudo agregar el artículo";
     }
 
-    public String modificarArticulo(Articulo articulo) {
+    public ResponseEntity<?> modificarArticulo(Articulo articulo) {
         Articulo articuloExistente = articuloRepositorio.findArticuloByCodigo(articulo.getCodigo());
         if (articuloExistente == null) {
-            return "No existe el artículo con código " + articulo.getCodigo();
+            return new ResponseEntity<>("No existe el artículo", HttpStatus.NOT_FOUND);
         }
         if (articulo.getMargenGanancia() > 0 && articulo.getMargenGanancia() <= 1) {
             articulo.setDeleted(false);
             articuloRepositorio.save(articulo);
-            return "Articulo modificado correctamente";
+            return new ResponseEntity<>(articulo, HttpStatus.CREATED);
         } else {
-            return "El margen de ganancia debe tener un valor mayor que 0 y menor o igual a 1";
+            return new ResponseEntity<>("El margen de ganancia debe estar entre 0 y 1", HttpStatus.BAD_REQUEST);
         }
     }
 
-    public String eliminarArticuloByCodigo(Long codigo) {
+    public ResponseEntity<Articulo> eliminarArticuloByCodigo(Long codigo) {
         Articulo articuloExistente = articuloRepositorio.findArticuloByCodigo(codigo);
         if (articuloExistente == null) {
-            return "No existe el artículo con código " + codigo;
+            return ResponseEntity.notFound().build();
         }
         articuloRepositorio.deleteById(codigo);
-        return "Articulo eliminado correctamente";
+        return ResponseEntity.ok().build();
     }
 
     public Articulo getArticuloByCodigo(Long codigo) {
         return articuloRepositorio.findArticuloByCodigo(codigo);
     }
 
-    public ResponseEntity<Articulo> getArticuloByCodigoAndEstado(Long codigo) {
+    public ResponseEntity<?> getArticuloByCodigoAndEstado(Long codigo) {
         Articulo articulo = articuloRepositorio.getArticuloByCodigoAndEstado(codigo);
         if (articulo == null) {
-            return ResponseEntity.notFound().build();
+            return new ResponseEntity<>("No existe el artículo", HttpStatus.NOT_FOUND);
         }
-        return ResponseEntity.ok(articulo);
+        return new ResponseEntity<>(articulo, HttpStatus.OK);
     }
 }

@@ -27,8 +27,8 @@ public class ArticuloControlador {
     }
 
     //busca y obtiene el artículo si no está eliminado lógicamente.
-    @GetMapping("/api/articulos/{codigo}") @ResponseBody
-    public ResponseEntity<Articulo> getArticulo(@PathVariable Long codigo){
+    @GetMapping("/api/articulos/{codigo}")
+    public ResponseEntity<?> getArticulo(@PathVariable Long codigo){
         return articuloServicio.getArticuloByCodigoAndEstado(codigo);
     }
 
@@ -38,12 +38,12 @@ public class ArticuloControlador {
     }
 
     @PutMapping("/api/articulos")
-    public String modificarArticulo(@RequestBody Articulo articulo){
+    public ResponseEntity<?> modificarArticulo(@RequestBody Articulo articulo){
         return articuloServicio.modificarArticulo(articulo);
     }
 
     @DeleteMapping("/api/articulos/{codigo}")
-    public String eliminarArticuloByCodigo(@PathVariable Long codigo){
+    public ResponseEntity<Articulo> eliminarArticuloByCodigo(@PathVariable Long codigo){
         return articuloServicio.eliminarArticuloByCodigo(codigo);
     }
 }

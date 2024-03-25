@@ -1,11 +1,13 @@
 package ingSoftware.laTienda.controller;
 
 import ingSoftware.laTienda.DTOs.StockYCantidad;
+import ingSoftware.laTienda.model.Venta;
 import ingSoftware.laTienda.service.AutorizacionAFIPServicio;
 import ingSoftware.laTienda.service.VentaServicio;
 import ingSoftware.laTienda.wsdl.SolicitarAutorizacionResponse;
 import ingSoftware.laTienda.wsdl.SolicitarUltimosComprobantesResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -34,7 +36,10 @@ public class VentaControlador {
     }
 
     @PostMapping("/api/ventas/{legajoVendedor}/{numeroDocumentoCliente}")
-    public String registrarNuevaVenta(@RequestBody List<StockYCantidad> stocksYCantidades, @PathVariable long legajoVendedor, @PathVariable long numeroDocumentoCliente) {
+    public ResponseEntity<?> registrarNuevaVenta(@RequestBody List<StockYCantidad> stocksYCantidades, @PathVariable long legajoVendedor, @PathVariable long numeroDocumentoCliente) {
+        System.out.println(stocksYCantidades);
+        System.out.println(legajoVendedor);
+        System.out.println(numeroDocumentoCliente);
         String token = solicitarToken().getSolicitarAutorizacionResult().getValue().getToken().getValue();
         return ventaServicio.registrar(stocksYCantidades, legajoVendedor, numeroDocumentoCliente, token);
     }

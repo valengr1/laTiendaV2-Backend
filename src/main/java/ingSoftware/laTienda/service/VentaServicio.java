@@ -3,22 +3,19 @@ package ingSoftware.laTienda.service;
 import ingSoftware.laTienda.DTOs.StockYCantidad;
 import ingSoftware.laTienda.model.*;
 import ingSoftware.laTienda.model.Comprobante;
-import ingSoftware.laTienda.model.TipoComprobante;
 import ingSoftware.laTienda.repository.*;
 import ingSoftware.laTienda.wsdl.*;
 import ingSoftware.laTienda.wsdl.TipoDocumento;
 import jakarta.transaction.Transactional;
 import jakarta.xml.bind.JAXBElement;
-import org.apache.tomcat.util.bcel.Const;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.TimeZone;
@@ -43,43 +40,31 @@ public class VentaServicio {
         this.comprobanteRepositorio = comprobanteRepositorio;
     }
 
-    public ResponseEntity<Venta> registrar(List<StockYCantidad> stocksYCantidades, Long legajoVendedor, long numeroDocumento, String token) {
-        //creo una venta
-        Venta v = new Venta();
-        //busco el cliente
-        Cliente cliente = buscarCliente(numeroDocumento);
-        //busco el vendedor
-        Vendedor vendedor = buscarVendedor(legajoVendedor);
-        //obtengo las condiciones tributarias
-        CondicionTributaria condicionTributariaTienda = vendedor.getPuntoVenta().getSucursal().getTienda().getCondicionTributaria();
-        CondicionTributaria condicionTributariaCliente = cliente.getCondicionTributaria();
-        //obtengo el numero de documento del cliente
-        Long numeroDocumentoCliente = cliente.getNumeroDocumento();
-        //obtengo el id de la sucursal
-        Long idSucursal = vendedor.getPuntoVenta().getSucursal().getId();
-        //verifico que haya stock suficiente
-        verificarStockSuficiente(stocksYCantidades, idSucursal);
-        //Agrego las lineas de venta a la venta
-        agregarLineasVenta(stocksYCantidades, idSucursal, v);
-        //obtengo los importes: total, neto e iva
-        double total = v.getTotal();
-        double importeNeto = v.getImporteNeto(total);
-        double importeIva = v.getImporteIva(total);
+    public ResponseEntity<?> registrar(List<StockYCantidad> stocksYCantidades, Long legajoVendedor, long numeroDocumento, String token) {
         try {
+            Venta v = new Venta();
+            Cliente cliente = buscarCliente(numeroDocumento);
+            Vendedor vendedor = buscarVendedor(legajoVendedor);
+            CondicionTributaria condicionTributariaTienda = vendedor.getPuntoVenta().getSucursal().getTienda().getCondicionTributaria();
+            CondicionTributaria condicionTributariaCliente = cliente.getCondicionTributaria();
+            Long numeroDocumentoCliente = cliente.getNumeroDocumento();
+            Long idSucursal = vendedor.getPuntoVenta().getSucursal().getId();
+            verificarStockSuficiente(stocksYCantidades, idSucursal);
+            agregarLineasVenta(stocksYCantidades, idSucursal, v);
+            double total = v.getTotal();
+            double importeNeto = v.getImporteNeto(total);
+            double importeIva = v.getImporteIva(total);
             SolicitarCaeResponse respuesta = solicitarAutorizacion(numeroDocumentoCliente, total, importeNeto, importeIva, token);
             if (respuesta.getSolicitarCaeResult().getValue().getError().getValue() != null) {
                 throw new IllegalArgumentException(respuesta.getSolicitarCaeResult().getValue().getError().getValue());
             } else {
-                //se actualiza el stock
                 actualizarStock(stocksYCantidades, idSucursal);
-                //se termina de formar la venta
-                formarVenta(cliente,vendedor,total,condicionTributariaCliente,condicionTributariaTienda,v);
-                //se guarda la venta
+                formarVenta(cliente, vendedor, total, condicionTributariaCliente, condicionTributariaTienda, v);
                 ventaRepositorio.save(v);
                 return ResponseEntity.ok(v);
             }
         } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -97,30 +82,30 @@ public class VentaServicio {
         for (StockYCantidad stockYCantidad : stocksYCantidades) {
             Long idStock = stockYCantidad.getStockid();
             Stock stock = stockRepositorio.findStockByIdAndSucursalId(idStock, idSucursal);
-            if(stock == null){
+            if (stock == null) {
                 throw new IllegalArgumentException("No se encontró el stock con id: " + idStock + " en la sucursal con id: " + idSucursal);
             }
             v.agregarLineaVenta(stock, stockYCantidad.getCantidadRequerida());
         }
     }
 
-    public Cliente buscarCliente(Long numeroDocumento){
+    public Cliente buscarCliente(Long numeroDocumento) {
         Cliente cliente = clienteRepositorio.findCliente(numeroDocumento);
-        if(cliente == null){
+        if (cliente == null) {
             throw new IllegalArgumentException("No se encontró el cliente con el número de documento: " + numeroDocumento);
         }
         return cliente;
     }
 
-    public Vendedor buscarVendedor(Long legajoVendedor){
+    public Vendedor buscarVendedor(Long legajoVendedor) {
         Vendedor vendedor = vendedorRepositorio.findByLegajo(legajoVendedor);
-        if(vendedor == null){
+        if (vendedor == null) {
             throw new IllegalArgumentException("No se encontró el vendedor con el legajo: " + legajoVendedor);
         }
         return vendedor;
     }
 
-    public void verificarStockSuficiente(List<StockYCantidad> stocksYCantidades, Long idSucursal){
+    public void verificarStockSuficiente(List<StockYCantidad> stocksYCantidades, Long idSucursal) {
         for (StockYCantidad stockYCantidad : stocksYCantidades) {
             Long idStock = stockYCantidad.getStockid();
             Stock stock = stockRepositorio.findStockByIdAndSucursalId(idStock, idSucursal);
@@ -128,18 +113,18 @@ public class VentaServicio {
                 if (stock.getCantidad() < stockYCantidad.getCantidadRequerida()) {
                     throw new IllegalArgumentException("No hay stock suficiente para el artículo con id: " + idStock);
                 }
-            } else{
+            } else {
                 throw new IllegalArgumentException("No se encontró el stock con id: " + idStock + " en la sucursal con id: " + idSucursal);
             }
         }
     }
 
-    public void actualizarStock(List<StockYCantidad> stocksYCantidades, Long idSucursal){
+    public void actualizarStock(List<StockYCantidad> stocksYCantidades, Long idSucursal) {
         for (StockYCantidad stockYCantidad : stocksYCantidades) {
             Long idStock = stockYCantidad.getStockid();
             int cantidadRequerida = stockYCantidad.getCantidadRequerida();
             Stock stock = stockRepositorio.findStockByIdAndSucursalId(idStock, idSucursal);
-            if(stock == null){
+            if (stock == null) {
                 throw new IllegalArgumentException("No se encontró el stock con id: " + idStock + " en la sucursal con id: " + idSucursal);
             }
             stockRepositorio.actualizarStock(idStock, cantidadRequerida, idSucursal);
